@@ -1,65 +1,77 @@
-.cardWrapper {
-  position: relative;  /* parent for absolute bell */
+/* Full-page container with vertical stacking and background */
+.container {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
+  padding: 20px;
   background: linear-gradient(to bottom right, #f3f6fd, #e0ebff);
-  padding: 60px 20px 40px;
   box-sizing: border-box;
 }
 
-/* ===============================
-   📌 Bell Notification Icon
-   =============================== */
-.bellWrapper {
+/* Top bar with centered title and logout button on top-right */
+.topBar {
+  display: flex;
+  justify-content: center; /* Center the title */
+  align-items: center;
+  position: relative; /* Needed to position logout button */
+  margin-bottom: 40px;
+}
+
+/* Centered blue-themed title */
+.title {
+  font-size: 48px;  /* Increased font size */
+  font-weight: 700; /* Slightly reduced boldness */
+  color: #3498db;   /* Matches blue theme */
+  text-align: center;
+}
+
+/* Logout button top-right corner */
+.logoutBtn {
   position: absolute;
-  top: 20px;
-  right: 30px;
+  right: 0;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
   cursor: pointer;
-  z-index: 10;
+  transition: background-color 0.2s ease;
 }
 
-.bellIcon {
-  font-size: 32px;       /* Bigger for visibility */
-  color: #0078d7;        /* Professional Azure Blue */
-  transition: transform 0.2s ease, color 0.2s ease;
+.logoutBtn:hover {
+  background-color: #d9363e;
 }
 
-.bellIcon:hover {
-  transform: scale(1.2);
-  color: #005a9e;        /* Darker azure on hover */
-}
-
-/* ===============================
-   📌 Cards Container
-   =============================== */
+/* Container for all cards */
 .cardContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 30px;
-  margin-top: 60px; /* space below bell */
+  flex-grow: 1;
 }
 
-/* ===============================
-   📌 Card Styles
-   =============================== */
+/* Base Card Style */
 .card {
   width: 100%;
   max-width: 600px;
-  height: 100px;
+  height: 130px; /* Slightly taller for vertical centering */
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 30px;
+  flex-direction: column;   /* Stack name and type vertically */
+  align-items: center;      /* Center horizontally */
+  justify-content: center;  /* Center vertically */
+  padding: 10px 30px;
   font-size: 20px;
   font-weight: 600;
-  color: #0078d7; /* Azure Blue */
+  color: #3498db;
   transition: all 0.3s ease;
   cursor: pointer;
-  border-left: 6px solid #0078d7;
+  border-left: 6px solid #3498db;
   text-align: center;
   box-sizing: border-box;
 }
@@ -70,20 +82,37 @@
   background-color: #fdfdfd;
 }
 
-/* ===============================
-   📌 Add Card (Special Styling)
-   =============================== */
-.addCard {
-  border: 2px dashed #0078d7;
-  background-color: #ecf6fd;
-  color: #0078d7;
-  border-left: none;
-  justify-content: center;
+/* Agency name inside card */
+.cardName {
+  font-size: 22px;
+  font-weight: 700;
+  color: #3498db;
+  margin-bottom: 6px;
+  text-align: center;
 }
 
+/* Agency type inside card */
+.cardType {
+  font-size: 18px;
+  font-weight: 500;
+  color: #3498db;
+  text-align: center;
+}
+
+/* Special styling for 'Add Card' */
+.addCard {
+  border: 2px dashed #3498db;
+  background-color: #ecf6fd;
+  color: #3498db;
+  justify-content: center;
+  border-left: none;
+  flex-direction: column;
+}
+
+/* Icon inside Add Card */
 .addIcon {
   font-size: 48px;
-  color: #0078d7;
+  color: #3498db;
   transition: transform 0.3s ease;
 }
 

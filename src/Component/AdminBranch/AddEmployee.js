@@ -1,47 +1,166 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useNavigate } from "react-router-dom";
 import "./AddEmployee.css";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function AddEmployee() {
-  const [employee, setEmployee] = useState({ name: "", role: "", contact: "", email: "", department: "" });
   const navigate = useNavigate();
+  const { aid } = useParams();
+  const [employee, setEmployee] = useState({ 
+    name: "", 
+    gender: "", // Empty default
+    phoneNumber: "", 
+    address: "", 
+    role: "", 
+    salary: "", 
+    agencyId: aid
+  });
+
+
   const handleChange = (e) => {
-    setEmployee({ ...employee, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setEmployee({ ...employee, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    //console.log("Employee details:", employee);
-    //alert("Employee details saved!");
-    navigate("/admin-login/display/Employee");
+    
+    try {
+      // Convert data types to match backend model
+      const employeeData = {
+        ...employee,
+        phoneNumber: employee.phoneNumber ? parseInt(employee.phoneNumber) : null,
+        salary: employee.salary ? parseFloat(employee.salary) : 0,
+      };
+      
+      console.log("Submitting employee data:", employeeData);
+      
+      // Make API call to save the employee
+      const response = await axios.post(
+        "http://localhost:8080/employee/addemployee", 
+        employeeData
+      );
+      
+      console.log("Employee saved successfully:", response.data);
+      alert("Employee saved successfully!");
+      navigate(`/admin-login/display/${aid}`);
+      // Reset form after successful submission
+      
+      setEmployee({ 
+        name: "", 
+        gender: "", 
+        phoneNumber: "", 
+        address: "", 
+        role: "", 
+        salary: "", 
+        agencyId: aid 
+      });
+      
+    } catch (error) {
+      console.error("Error saving employee:", error);
+      alert("Failed to save employee. Please check the console for details.");
+    }
   };
 
   return (
     <div className="add-employee-container">
       <div className="card shadow p-4 employee-card">
-        <h2 className="text-center mb-4 text-primary">Add Employee</h2>
+        <h2 className="text-center mb-4">Add Employee</h2>
+        <div className="alert alert-info mb-4">
+          <strong>Agency ID:</strong> {aid}
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label className="form-label">Employee Name</label>
-            <input type="text" className="form-control" name="name" value={employee.name} onChange={handleChange} placeholder="Enter employee name" required />
+            <label className="form-label">Employee Name *</label>
+            <input 
+              type="text" 
+              className="form-control" 
+              name="name" 
+              value={employee.name} 
+              onChange={handleChange} 
+              placeholder="Enter employee name" 
+              required 
+            />
           </div>
+          
           <div className="mb-3">
-            <label className="form-label">Role</label>
-            <input type="text" className="form-control" name="role" value={employee.role} onChange={handleChange} placeholder="Enter role" required />
+            <label className="form-label">Gender *</label>
+            <select 
+              className="form-control" 
+              name="gender" 
+              value={employee.gender} 
+              onChange={handleChange} 
+              required
+            >
+              <option value="">Select Gender</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+              <option value="O">Other</option>
+            </select>
           </div>
+          
           <div className="mb-3">
-            <label className="form-label">Contact Number</label>
-            <input type="tel" className="form-control" name="contact" value={employee.contact} onChange={handleChange} placeholder="Enter contact number" required />
+            <label className="form-label">Phone Number *</label>
+            <input 
+              type="tel" 
+              className="form-control" 
+              name="phoneNumber" 
+              value={employee.phoneNumber} 
+              onChange={handleChange} 
+              placeholder="Enter phone number" 
+              required 
+            />
           </div>
+          
           <div className="mb-3">
-            <label className="form-label">Email</label>
-            <input type="email" className="form-control" name="email" value={employee.email} onChange={handleChange} placeholder="Enter email address" required />
+            <label className="form-label">Address</label>
+            <textarea 
+              className="form-control" 
+              name="address" 
+              value={employee.address} 
+              onChange={handleChange} 
+              placeholder="Enter address" 
+              rows="3"
+            />
           </div>
+          
+          <div className="mb-3">
+            <label className="form-label">Role *</label>
+            <input 
+              type="text" 
+              className="form-control" 
+              name="role" 
+              value={employee.role} 
+              onChange={handleChange} 
+              placeholder="Enter role" 
+              required 
+            />
+          </div>
+          
           <div className="mb-4">
-            <label className="form-label">Department</label>
-            <input type="text" className="form-control" name="department" value={employee.department} onChange={handleChange} placeholder="Enter department" required />
+            <label className="form-label">Salary *</label>
+            <input 
+              type="number" 
+              className="form-control" 
+              name="salary" 
+              value={employee.salary} 
+              onChange={handleChange} 
+              placeholder="Enter salary" 
+              step="0.01"
+              min="0"
+              required 
+            />
           </div>
+          
+          {/* Hidden field for agencyId */}
+          <input 
+            type="hidden" 
+            name="agencyId" 
+            value={employee.agencyId} 
+          />
+          
           <div className="text-center">
             <button type="submit" className="btn btn-primary px-4">Save Employee</button>
           </div>

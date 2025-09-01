@@ -1,61 +1,71 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./AdminLogin.module.css"; 
-//import axios from "axios";
+import styles from "./AdminLogin.module.css"; // ✅ Import CSS module
+import axios from "axios";
 
-const AdminLogin = () => {
-  const [emailOrUsername, setEmailOrUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const SAMPLE_ADMINS = [
+// Sample hardcoded admin credentials
+const SAMPLE_ADMINS = [
   { username: "admin", email: "admin@example.com", password: "admin123" },
   { username: "superuser", email: "super@example.com", password: "super123" },
 ];
+
+const AdminLogin = () => {
+  const [userName, setuserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async  (e) => {
     e.preventDefault();
-    
-    const isValidAdmin = SAMPLE_ADMINS.some(
-      (admin) =>
-        (admin.username === emailOrUsername || admin.email === emailOrUsername) &&
-        admin.password === password
-    );
 
-    if (isValidAdmin) {
-      navigate("/admin-login/card");
-    } else {
-      setError("Invalid credentials. Please try again.");
-    }
-    // try{
-    //     const res = axios.post("http://localhost:8080/login/admin-login/",);
-    // if(res.status === 200){
+
+    // const isValidAdmin = SAMPLE_ADMINS.some(
+    //   (admin) =>
+    //     (admin.username === userName || admin.email === userName) &&
+    //     admin.password === password
+    // );
+
+    // if (isValidAdmin) {
     //   navigate("/admin-login/card");
+    // } else {
+    //   setError("Invalid credentials. Please try again.");
     // }
-    // else if(res.status === 400) {
-    //     alert("Invalid credentials. Please try again.");
-    // }
-    // }catch(err){
-    //     console.log(err);
-    //     setError("Invalid credentials. Please try again.");
-    //     alert("Something went wrong! Please try again later.");
-    // }
+
+    try{
+        const res = await axios.post(`http://localhost:8080/login/admin-login?userName=${userName}&password=${password}`);
+        if(res.status===200){
+          //alert("Success");
+          navigate("/admin-login/card");
+        }
+        else{
+          alert("Invalid credentials")
+        }
+    }
+    catch(err)
+    {
+      alert("Something wrong");
+    }
   };
 
   return (
     <div className={styles.adminLoginWrapper}>
+            <button
+  className={styles.homeButton}
+  onClick={() => navigate("/")}>  
+  Home</button>
       <div className={styles.adminLoginCard}>
         <h3 className={styles.adminLoginTitle}>Admin Login</h3>
 
         <form onSubmit={handleLogin}>
           <div className={styles.formGroup}>
-            <label htmlFor="emailOrUsername">Username or Email</label>
+            <label htmlFor="userName">Username or Email</label>
             <input
               type="text"
-              id="emailOrUsername"
+              id="userName"
               placeholder="Enter username or email"
-              value={emailOrUsername}
-              onChange={(e) => setEmailOrUsername(e.target.value)}
+              value={userName}
+              onChange={(e) => setuserName(e.target.value)}
               className={styles.inputField}
               required
             />

@@ -1,58 +1,61 @@
-/*import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Card from "./Card";
-import styles from "./Card.module.css"; // ✅ Import CSS module styles
-
-const AdminCardView = () => {
-  const navigate = useNavigate();
-
-  const handleCardClick = (role) => {
-    navigate(`/admin-login/display/${role}`);
-  };
-
-  return (
-    <div className={styles.cardContainer}> 
-      <Card title="Employee" onClick={handleCardClick} />
-      <Card title="Canteen Employee" onClick={handleCardClick} />
-      <Card title="Sanitary Employee" onClick={handleCardClick} />
-      <Card isAddCard /> 
-    </div>
-  );
-};
-
-export default AdminCardView;
-*/
-
-
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { FaBell } from "react-icons/fa";  // Bell icon
+import axios from "axios";
 import Card from "./Card";
 import styles from "./Card.module.css";
 
 const AdminCardView = () => {
+  const [agencies, setAgencies] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const handleCardClick = (role) => {
-    navigate(`/admin-login/display/${role}`);
+  useEffect(() => {
+    const fetchAgencies = async () => {
+      try {
+        const res = await axios.get("http://localhost:8080/agency/");
+        setAgencies(res.data);
+        console.log("Agencies data:", res.data);
+      } catch (err) {
+        console.error("Error fetching agencies:", err);
+        alert("Failed to load agencies");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAgencies();
+  }, []);
+
+  const handleCardClick = (agency) => {
+    console.log("Clicked agency:", agency);
+    navigate(`/admin-login/display/${agency.agencyId}`);
   };
 
+  const handleLogout = () => {
+    // Optional: Clear auth/session here
+    navigate("/admin-login"); // Navigate to your login route
+  };
+
+  if (loading) return <p>Loading agencies...</p>;
+
   return (
-    <div className={styles.cardWrapper}>
-      {/* 🔔 Bell Icon */}
-      <div
-        className={styles.bellWrapper}
-        onClick={() => navigate("/admin-login/card/claim-requests")}
-      >
-        <FaBell className={styles.bellIcon} />
+    <div className={styles.container}>
+      <div className={styles.topBar}>
+        <h2 className={styles.title}>Agencies</h2>
+        <button className={styles.logoutBtn} onClick={handleLogout}>
+          Logout
+        </button>
       </div>
 
-      {/* 📋 Cards */}
       <div className={styles.cardContainer}>
-        <Card title="Software Engineer" onClick={() => handleCardClick("Software Engineer")} />
-        <Card title="Manager" onClick={() => handleCardClick("Manager")} />
-        <Card title="Designer" onClick={() => handleCardClick("Designer")} />
-
+        {agencies.map((agency, index) => (
+          <Card
+            key={index}
+            agency={agency} 
+            onClick={handleCardClick}
+          />
+        ))}
+        {/* Add agency card */}
         <Card isAddCard />
       </div>
     </div>

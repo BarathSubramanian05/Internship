@@ -59,17 +59,17 @@ import UserDashboard from './Component/UserBranch/UserDashboard';
 import UserDetail from "./Component/UserBranch/UserDetail";
 import ClaimRequests from './Component/AdminBranch/ClaimRequests'; // Admin claim requests page
 function App() {
-  return (
+  return (      
     <Router>
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Home />} />
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin-login/card" element={<AdminCardView />} />
-        <Route path="/admin-login/display/:role" element={<Display />} />
+        <Route path="/admin-login/display/:agencyId" element={<Display />} />
         <Route path="/admin-login/card/add-agency" element={<AddAgency />} />
         <Route path="/admin-login/card/claim-requests" element={<ClaimRequests />} />
-        <Route path="/admin-login/card/add-employee" element={<AddEmployee />} />
+        <Route path="/admin-login/card/add-employee/:aid" element={<AddEmployee />} />
         <Route path="/admin-login/card/display/employee/:id" element={<Detail />} />
         <Route path="/user-login" element={<Login />} />
 

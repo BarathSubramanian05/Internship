@@ -111,6 +111,10 @@ const Login = () => {
 
   return (
     <div className={styles.loginContainer}>
+      <button
+  className={styles.homeButton}
+  onClick={() => navigate("/")}>  
+  Home</button>
       <div className={styles.loginBox}>
         <h2>User Login</h2>
 

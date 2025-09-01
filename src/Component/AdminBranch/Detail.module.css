@@ -1,286 +1,315 @@
-
-/* Global Font */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
-
-body {
-  font-family: "Poppins", sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-}
-
-/* Main Container */
+/* Detail.module.css */
 .detailContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 30px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #eaf4ff; /* light blue background */
   min-height: 100vh;
-  box-sizing: border-box;
 }
 
-/* Left Panel (Employee Info) */
-.leftPanel {
-  flex: 1;
-  min-width: 250px;
-  background: linear-gradient(135deg, #e6f0ff, #ffffff);
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-}
-
-.leftPanel h2 {
-  font-size: 24px;   /* increased from 20px */
-  margin-bottom: 15px;
-  color: #1f3a93;
-  font-weight: 700;  /* bolder for emphasis */
-}
-
-.leftPanel p {
-  margin: 8px 0;
-  font-size: 14px;
-  color: #333;
-}
-
-/* Right Panel (Attendance Section) */
-.rightPanel {
-  flex: 2;
-  min-width: 350px;
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-}
-.rightPanel h2 {
-  font-size: 24px;   /* added for attendance heading */
-  margin-bottom: 15px;
-  color: #1f3a93;
-  font-weight: 700;
-  text-align: center; /* optional: center it */
-}
-/* Date filter box */
-.filterBox {
+.header {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #007bff;
 }
 
-.filterBox label {
-  font-size: 14px;
+.backButton {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 20px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.backButton:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.header h2 {
+  color: #007bff; /* blue heading */
+  margin: 0;
+  font-size: 28px;
   font-weight: 600;
 }
 
-.filterBox input {
-  padding: 6px 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+.content {
+  display: flex;
+  gap: 25px;
+  margin-top: 20px;
 }
 
-.filterBox button {
-  padding: 6px 12px;
-  font-size: 14px;
-  background: #3498db;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s ease;
+.leftPanel {
+  flex: 1;
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #28a745; /* green accent */
 }
 
-.filterBox button:hover {
-  background: #2c80b4;
+.leftPanel h3 {
+  color: #28a745; /* green heading */
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 600;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 10px;
 }
 
-/* Attendance Table */
+.rightPanel {
+  flex: 2;
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #007bff; /* blue accent */
+}
+
+.rightPanel h3 {
+  color: #007bff; /* blue heading */
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 600;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 10px;
+}
+
+.employeeInfo {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #6c757d;
+}
+
+.employeeInfo p {
+  margin: 12px 0;
+  padding: 8px 0;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 16px;
+}
+
+.employeeInfo p:last-child {
+  border-bottom: none;
+}
+
+.employeeInfo strong {
+  color: #0056b3; /* dark blue labels */
+  font-weight: 600;
+  min-width: 100px;
+  display: inline-block;
+}
+
 .attendanceTable {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.attendanceTable th,
-.attendanceTable td {
-  border: 1px solid #ddd;
-  padding: 10px 12px;
-  font-size: 14px;
-  text-align: center;
-}
-
-.attendanceTable th {
-  background: #1f3a93;
-  color: white;
-  font-weight: 600;
-}
-
-.attendanceTable tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.absentRow {
-  background-color: #ffe6e6;
-  color: #d63031;
-  font-weight: 600;
-}
-
-/* Modal Overlay */
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-/* Modal Content */
-.modalContent {
-  background: white;
-  padding: 25px;
-  border-radius: 10px;
-  width: 350px;
-  max-width: 90%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  text-align: center;
-}
-
-.modalContent h3 {
-  margin-bottom: 15px;
-  color: #1f3a93;
-}
-
-.modalContent p {
-  margin: 8px 0;
-  font-size: 14px;
-}
-
-/* Toggle Button */
-.toggleBtn {
-  margin: 15px 0;
-  padding: 8px 16px;
-  font-size: 14px;
-  background: #f39c12;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.toggleBtn:hover {
-  background: #d68910;
-}
-
-/* Modal Actions */
-.modalActions {
-  display: flex;
-  justify-content: space-around;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
   margin-top: 15px;
 }
 
-.doneBtn {
-  background: #2ecc71;
+.attendanceTable th {
+  background-color: #007bff;
   color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s ease;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 16px;
 }
 
-.doneBtn:hover {
-  background: #27ae60;
+.attendanceTable td {
+  padding: 15px;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 15px;
 }
 
-.cancelBtn {
-  background: #e74c3c;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s ease;
+.attendanceTable tr:last-child td {
+  border-bottom: none;
 }
 
-.cancelBtn:hover {
-  background: #c0392b;
+.attendanceTable tr:hover {
+  background-color: #f8f9fa;
 }
 
-/* Error Section */
+.absentRow {
+  background-color: #fff5f5;
+}
+
+.absentRow:hover {
+  background-color: #ffe3e3;
+}
+
+.absentRow td {
+  color: #dc3545;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px;
+  font-size: 20px;
+  color: #6c757d;
+}
+
 .error {
   text-align: center;
-  padding: 30px;
-  background: #fff3cd;
-  border: 1px solid #ffeeba;
-  border-radius: 8px;
+  padding: 40px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.error h3 {
+  color: #dc3545;
+  margin-bottom: 15px;
 }
 
 .error p {
-  color: #856404;
-  margin-bottom: 15px;
-  font-weight: 600;
+  color: #6c757d;
+  margin-bottom: 20px;
+  font-size: 16px;
 }
 
-.error button {
-  padding: 8px 16px;
-  background: #3498db;
+.troubleshooting {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+  margin: 15px 0;
+  text-align: left;
+}
+
+.troubleshooting p {
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #495057;
+}
+
+.troubleshooting ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #6c757d;
+}
+
+.troubleshooting li {
+  margin-bottom: 5px;
+}
+
+.noRecords {
+  color: #6c757d;
+  font-style: italic;
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.recordCount {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+/* Button styles */
+button {
+  background-color: #007bff;
   color: white;
   border: none;
+  padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
 }
 
-.error button:hover {
-  background: #2c80b4;
+button:hover {
+  background-color: #0056b3;
 }
 
-/* Responsive */
+/* Responsive design */
 @media (max-width: 768px) {
   .detailContainer {
-    flex-direction: column;
     padding: 15px;
   }
-
-  .filterBox {
-    justify-content: flex-start;
+  
+  .content {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .leftPanel, .rightPanel {
+    flex: none;
+    width: 100%;
+    padding: 20px;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .backButton {
+    margin-right: 0;
+  }
+  
+  .attendanceTable {
+    font-size: 14px;
+  }
+  
+  .attendanceTable th,
+  .attendanceTable td {
+    padding: 10px;
+  }
+  
+  .employeeInfo p {
+    font-size: 14px;
   }
 }
-/* Pagination Controls */
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  gap: 8px;
+
+/* Animation for loading */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
 
-.pagination button {
-  padding: 6px 12px;
-  border: 1px solid #1f3a93;
-  background: #fff;
-  color: #1f3a93;
-  font-size: 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.loading {
+  animation: pulse 1.5s ease-in-out infinite;
 }
 
-.pagination button:hover {
-  background: #1f3a93;
-  color: #fff;
+/* Custom scrollbar for table */
+.attendanceTable::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-.activePage {
-  background: #1f3a93 !important;
-  color: #fff !important;
-  font-weight: 600;
-  border: 1px solid #1f3a93;
+.attendanceTable::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
 }
 
+.attendanceTable::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.attendanceTable::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

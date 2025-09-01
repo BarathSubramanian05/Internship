@@ -26,9 +26,9 @@ if (!employee) return null;
         <h2>{employee.name}</h2>
         <p><strong>Phone:</strong> +91 {employee.phoneNumber}</p>
         <p><strong>Employee ID:</strong> {employee.employeeId}</p>
-        <p><strong>Agency:</strong> {employee.agencyId}</p>
+        <p><strong>Agency ID:</strong> {employee.agencyId}</p>
         <p><strong>Role:</strong> {employee.role}</p>
-        {/* <p><strong>Email:</strong> {employee.email}</p> */}
+        <p><strong>Salary:</strong> Rs.{employee.salary}</p>
       </div>
     </div>
   );

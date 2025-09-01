@@ -55,8 +55,8 @@ const UserDetail = () => {
         <h2>Employee Info</h2>
         <p><strong>ID:</strong> {employee.employeeId}</p>
         <p><strong>Name:</strong> {employee.name}</p>
-        <p><strong>Agency:</strong> {employee.agency || employee.role}</p>
-        <p><strong>Position:</strong> {employee.position}</p>
+        <p><strong>Agency ID:</strong> {employee.agencyId}</p>
+        <p><strong>Position:</strong> {employee.role}</p>
       </div>
 
       {/* Right panel: Attendance Table */}

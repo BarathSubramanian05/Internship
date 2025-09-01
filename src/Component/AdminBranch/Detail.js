@@ -1,239 +1,228 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { dummyData } from "./data";
+import axios from "axios";
 import styles from "./Detail.module.css";
-
-const calculateWorkHours = (timeIn, timeOut) => {
-  if (timeIn === "-" || timeOut === "-" || timeIn === "--" || timeOut === "--")
-    return "-";
-
-  const [inHour, inMin] = timeIn.split(":").map(Number);
-  const [outHour, outMin] = timeOut.split(":").map(Number);
-
-  const inDate = new Date(0, 0, 0, inHour, inMin);
-  const outDate = new Date(0, 0, 0, outHour, outMin);
-
-  let diff = (outDate - inDate) / (1000 * 60 * 60);
-  if (diff < 0) diff += 24;
-
-  return diff.toFixed(2);
-};
 
 const Detail = () => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const [employee, setEmployee] = useState(null);
+  const [attendance, setAttendance] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const [records, setRecords] = useState(dummyData);
-  const [selectedRecord, setSelectedRecord] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedDate, setSelectedDate] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!id) {
+        setError("No employee ID provided");
+        setLoading(false);
+        return;
+      }
 
-  const employee =
-    location.state?.employee || records.find((emp) => emp.id === parseInt(id));
+      try {
+        // Fetch employee details first
+        console.log("Fetching employee details for ID:", id);
+        const employeeResponse = await axios.get(
+          `http://localhost:8080/employee/${id}`
+        );
+        console.log("Employee response:", employeeResponse.data);
+        setEmployee(employeeResponse.data);
 
-  if (!employee) {
+        // Then fetch attendance data
+        try {
+          console.log("Fetching attendance data for ID:", id);
+          const attendanceResponse = await axios.get(
+            `http://localhost:8080/attendance/${id}`
+          );
+          console.log("Attendance response:", attendanceResponse.data);
+          
+          if (attendanceResponse.data && attendanceResponse.data.attendance) {
+            setAttendance(attendanceResponse.data);
+          } else {
+            console.log("No attendance data found");
+          }
+        } catch (attendanceError) {
+          console.warn("No attendance data found:", attendanceError);
+          // Continue without attendance data
+        }
+      } catch (err) {
+        console.error("Error fetching employee data:", err);
+        if (err.response) {
+          console.error("Error response:", err.response.data);
+          console.error("Error status:", err.response.status);
+          setError(`Error: ${err.response.status} - ${err.response.data}`);
+        } else {
+          setError("Failed to fetch employee data. Please check if the backend is running.");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  const calculateWorkHours = (inTime, outTime) => {
+    if (!inTime || !outTime) return "-";
+
+    try {
+      const inDate = new Date(inTime);
+      const outDate = new Date(outTime);
+      
+      const diffMs = outDate - inDate;
+      const diffHours = diffMs / (1000 * 60 * 60);
+      
+      return diffHours.toFixed(2);
+    } catch (error) {
+      console.error("Error calculating work hours:", error);
+      return "-";
+    }
+  };
+
+  const formatDate = (dateTime) => {
+    if (!dateTime) return "-";
+    
+    try {
+      const date = new Date(dateTime);
+      return date.toLocaleDateString();
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return "-";
+    }
+  };
+
+  const formatTime = (dateTime) => {
+    if (!dateTime) return "-";
+    
+    try {
+      const date = new Date(dateTime);
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch (error) {
+      console.error("Error formatting time:", error);
+      return "-";
+    }
+  };
+
+  const getStatus = (inTime, outTime) => {
+    if (!inTime) return "Absent";
+    if (!outTime) return "Present (No out-time)";
+    return "Present";
+  };
+
+  if (loading) {
     return (
-      <div className={styles.error}>
-        <p>No employee data found. Please go back and try again.</p>
-        <button onClick={() => navigate(-1)}>Go Back</button>
+      <div className={styles.detailContainer}>
+        <div className={styles.loading}>Loading employee data...</div>
       </div>
     );
   }
 
-  // Filter records for the employee
-  const allAttendanceRecords = records
-    .filter((item) => item.id === employee.id && item.date)
-    .sort((a, b) => new Date(b.date) - new Date(a.date));
-
-  // Pagination
-  const recordsPerPage = 10;
-  const totalPages = Math.ceil(allAttendanceRecords.length / recordsPerPage);
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = allAttendanceRecords.slice(
-    indexOfFirstRecord,
-    indexOfLastRecord
-  );
-
-  // when user picks a date
-  const handleDateChange = (e) => {
-    setSelectedDate(e.target.value);
-  };
-
-  const handleDateOk = () => {
-    if (!selectedDate) return alert("Please choose a date first.");
-    const record = allAttendanceRecords.find((r) => r.date === selectedDate);
-    if (record) {
-      setSelectedRecord({ ...record });
-      setShowModal(true);
-    } else {
-      alert("No record found for this date!");
-    }
-  };
-
-  // toggle Present/Absent
-  const toggleStatus = () => {
-    setSelectedRecord((prev) => {
-      const newStatus = prev.status === "Present" ? "Absent" : "Present";
-      return {
-        ...prev,
-        status: newStatus,
-        timeIn: "--",
-        timeOut: "--",
-      };
-    });
-  };
-
-  // update data
-  const handleDone = () => {
-    setRecords((prev) =>
-      prev.map((rec) =>
-        rec.id === employee.id && rec.date === selectedRecord.date
-          ? {
-              ...rec,
-              status: selectedRecord.status,
-              timeIn: selectedRecord.timeIn,
-              timeOut: selectedRecord.timeOut,
-            }
-          : rec
-      )
+  if (error) {
+    return (
+      <div className={styles.detailContainer}>
+        <div className={styles.error}>
+          <h3>Error Loading Employee Data</h3>
+          <p>{error}</p>
+          <div className={styles.troubleshooting}>
+            <p>Please check:</p>
+            <ul>
+              <li>Is the backend server running on port 8080?</li>
+              <li>Does the endpoint /employee/{id} exist?</li>
+              <li>Check browser console for more details</li>
+            </ul>
+          </div>
+          <button onClick={() => navigate(-1)}>Go Back</button>
+        </div>
+      </div>
     );
-    setShowModal(false);
-    setSelectedDate("");
-  };
+  }
 
-  // pagination change
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
+  if (!employee) {
+    return (
+      <div className={styles.detailContainer}>
+        <div className={styles.error}>
+          <p>Employee not found</p>
+          <button onClick={() => navigate(-1)}>Go Back</button>
+        </div>
+      </div>
+    );
+  }
+
+  // Get attendance records, sorted by date (newest first)
+  const attendanceRecords = attendance?.attendance
+    ?.map((day, index) => ({
+      date: day.inTime || new Date().toISOString(),
+      inTime: day.inTime,
+      outTime: day.outTime,
+      status: getStatus(day.inTime, day.outTime),
+      workHours: calculateWorkHours(day.inTime, day.outTime)
+    }))
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 10) || [];
 
   return (
     <div className={styles.detailContainer}>
-      <div className={styles.leftPanel}>
+      <div className={styles.header}>
+        <button className={styles.backButton} onClick={() => navigate(-1)}>
+          ← Back
+        </button>
         <h2>Employee Details</h2>
-        <p>
-          <strong>ID:</strong> {employee.id}
-        </p>
-        <p>
-          <strong>Name:</strong> {employee.name}
-        </p>
-        <p>
-          <strong>Agency:</strong> {employee.agency || employee.role}
-        </p>
-        <p>
-          <strong>Position:</strong> {employee.position}
-        </p>
       </div>
 
-      <div className={styles.rightPanel}>
-        {/* Date filter */}
-        <div className={styles.filterBox}>
-          <label>Filter by Date: </label>
-          <input type="date" value={selectedDate} onChange={handleDateChange} />
-          <button onClick={handleDateOk}>OK</button>
+      <div className={styles.content}>
+        <div className={styles.leftPanel}>
+          <h3>Employee Information</h3>
+          <div className={styles.employeeInfo}>
+            <p><strong>ID:</strong> {employee.employeeId || employee.id || "N/A"}</p>
+            <p><strong>Name:</strong> {employee.name || "N/A"}</p>
+            <p><strong>Gender:</strong> {employee.gender === 'M' ? 'Male' : employee.gender === 'F' ? 'Female' : employee.gender || "N/A"}</p>
+            <p><strong>Phone:</strong> {employee.phoneNumber || "N/A"}</p>
+            <p><strong>Address:</strong> {employee.address || "N/A"}</p>
+            <p><strong>Role:</strong> {employee.role || "N/A"}</p>
+            <p><strong>Salary:</strong> {employee.salary ? `$${employee.salary.toFixed(2)}` : "N/A"}</p>
+            <p><strong>Agency ID:</strong> {employee.agencyId || "N/A"}</p>
+          </div>
         </div>
 
-        <h3>Attendance Records (Month)</h3>
-        <table className={styles.attendanceTable}>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Status</th>
-              <th>Time In</th>
-              <th>Time Out</th>
-              <th>Work Hours</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentRecords.length === 0 && (
-              <tr>
-                <td colSpan="5" style={{ textAlign: "center" }}>
-                  No attendance records found.
-                </td>
-              </tr>
-            )}
-            {currentRecords.map((record, idx) => (
-              <tr
-                key={idx}
-                className={record.status === "Absent" ? styles.absentRow : ""}
-              >
-                <td>{record.date}</td>
-                <td>{record.status}</td>
-                <td>{record.timeIn}</td>
-                <td>{record.timeOut}</td>
-                <td>{calculateWorkHours(record.timeIn, record.timeOut)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {/* Pagination Controls */}
-        {totalPages > 1 && (
-          <div className={styles.pagination}>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => handlePageChange(i + 1)}
-                className={currentPage === i + 1 ? styles.activePage : ""}
-              >
-                {i + 1}
-              </button>
-            ))}
-            {currentPage < totalPages && (
-              <button onClick={() => handlePageChange(currentPage + 1)}>
-                Next
-              </button>
-            )}
-          </div>
-        )}
+        <div className={styles.rightPanel}>
+          <h3>Attendance Records</h3>
+          {attendanceRecords.length === 0 ? (
+            <p className={styles.noRecords}>No attendance records found.</p>
+          ) : (
+            <>
+              <table className={styles.attendanceTable}>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Time In</th>
+                    <th>Time Out</th>
+                    <th>Work Hours</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {attendanceRecords.map((record, index) => (
+                    <tr
+                      key={index}
+                      className={record.status === "Absent" ? styles.absentRow : ""}
+                    >
+                      <td>{formatDate(record.inTime || record.date)}</td>
+                      <td>{record.status}</td>
+                      <td>{formatTime(record.inTime)}</td>
+                      <td>{formatTime(record.outTime)}</td>
+                      <td>{record.workHours}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className={styles.recordCount}>
+                Showing {attendanceRecords.length} most recent records
+              </p>
+            </>
+          )}
+        </div>
       </div>
-
-      {/* Modal */}
-      {showModal && selectedRecord && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <h3>Attendance Details</h3>
-            <p>
-              <strong>Date:</strong> {selectedRecord.date}
-            </p>
-            <p>
-              <strong>Status:</strong> {selectedRecord.status}
-            </p>
-            <p>
-              <strong>Time In:</strong> {selectedRecord.timeIn}
-            </p>
-            <p>
-              <strong>Time Out:</strong> {selectedRecord.timeOut}
-            </p>
-            <p>
-              <strong>Work Hours:</strong>{" "}
-              {calculateWorkHours(
-                selectedRecord.timeIn,
-                selectedRecord.timeOut
-              )}
-            </p>
-
-            <button onClick={toggleStatus} className={styles.toggleBtn}>
-              Toggle to{" "}
-              {selectedRecord.status === "Present" ? "Absent" : "Present"}
-            </button>
-
-            <div className={styles.modalActions}>
-              <button onClick={handleDone} className={styles.doneBtn}>
-                Done
-              </button>
-              <button
-                onClick={() => setShowModal(false)}
-                className={styles.cancelBtn}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

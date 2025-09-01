@@ -94,11 +94,12 @@ const Login = () => {
         params: { phoneNumber: phone }  
     });
       const employee = response.data;
-      console.log(employee);
-      console.log(response);
+      //console.log(employee);
+      //console.log(response);
       
       if (employee) {
       setEmployee(employee);
+      localStorage.setItem("employee", JSON.stringify(employee));
       navigate('/user', { state: { employee: employee } });
         }
       }

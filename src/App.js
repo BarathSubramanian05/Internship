@@ -56,6 +56,7 @@ import AttendancePage from './Component/UserBranch/AttendancePage';
 import UserLayout from './Component/UserBranch/UserLayout'; 
 import ClaimRequest from './Component/UserBranch/ClaimRequest';
 import UserDashboard from './Component/UserBranch/UserDashboard';
+import UserDetail from "./Component/UserBranch/UserDetail";
 import ClaimRequests from './Component/AdminBranch/ClaimRequests'; // Admin claim requests page
 function App() {
   return (
@@ -77,7 +78,7 @@ function App() {
           <Route index element={<UserDashboard  />} /> {/* Default dashboard */}
           <Route path="dashboard" element={<UserDashboard />} />
           <Route path="claim-request" element={<ClaimRequest />} />
-          <Route path="view-attendance" element={<Detail/>} />
+          <Route path="view-attendance" element={<UserDetail/>} />
           <Route path="post-attendance" element={<AttendancePage />} />
         </Route>
       </Routes>

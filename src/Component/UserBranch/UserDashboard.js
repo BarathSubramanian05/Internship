@@ -6,9 +6,15 @@ import axios from "axios";
 import { EmployeeContext } from "../../Context/EmployeeContext";
 
 const UserDashboard = () => {
-  const location = useLocation();
+  const navigate = useNavigate();
   const { employee } = useContext(EmployeeContext);
   console.log(employee);
+  useEffect(() => {
+  if (!employee) navigate("/user-login");
+}, [employee, navigate]);
+
+if (!employee) return null;
+
   return (
     <div className={styles.dashboardContainer}>
       <header className={styles.header}>

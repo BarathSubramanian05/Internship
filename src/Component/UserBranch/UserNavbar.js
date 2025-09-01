@@ -10,8 +10,9 @@ import { useContext } from "react";
 const UserNavbar = () => {
 
   const navigate = useNavigate();
-  const { employee } = useContext(EmployeeContext);
+  const { employee,logout } = useContext(EmployeeContext);
   const handleLogout = () => {
+    logout();
     navigate("/user-login");
   };
 

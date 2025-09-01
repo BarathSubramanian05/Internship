@@ -1,0 +1,62 @@
+.dashboardContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #f4f8fb;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  color: #007fff; /* Azure Blue */
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* Employee Card */
+.userCard {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.userCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+/* User Icon */
+.userIcon {
+  font-size: 80px;
+  color: #007fff;
+  margin-bottom: 15px;
+}
+
+/* Employee Details */
+.userCard h2 {
+  margin-bottom: 15px;
+  color: #003366; /* Dark Azure Text */
+}
+
+.userCard p {
+  font-size: 1rem;
+  color: #444;
+  margin: 8px 0;
+}
+
+.userCard p strong {
+  color: #007fff;
+}

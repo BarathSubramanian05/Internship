@@ -1,0 +1,95 @@
+// data.js
+export const dummyData = [
+  // Employee master data (unique IDs)
+  { id: 1, name: "Alice",email:"alice@gmail.com", role: "Employee", agency: "Development", position: "Developer" },
+  { id: 2, name: "Bob",email:"bob@gmail.com", role: "Employee", agency: "Testing", position: "Tester" },
+  { id: 3, name: "Raj",email:"raj@gmail.com", role: "Canteen Employee", agency: "Canteen", position: "Chef" },
+  { id: 4, name: "Kumar",email:"kumar@gmail.com", role: "Canteen Employee", agency: "Canteen", position: "Helper" },
+  { id: 5, name: "Anu",email:"anu@gmail.com", role: "Sanitary Employee", agency: "Sanitation", position: "Cleaner" },
+  { id: 6, name: "Ravi",email:"ravi@gmail.com", role: "Sanitary Employee", agency: "Sanitation", position: "Supervisor" },
+  { id: 7, name: "Gayathri",email:"gayathri@gmail.com", role: "Employee", agency: "Management", position: "Supervisor" },
+
+  // Attendance data for Alice (id:1)
+  { id: 1, date: "2025-08-10", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 1, date: "2025-08-09", timeIn: "09:15", timeOut: "17:30", status: "Present" },
+  { id: 1, date: "2025-08-08", timeIn: "-", timeOut: "-", status: "Absent" },
+  { id: 1, date: "2025-08-07", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 1, date: "2025-08-06", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 1, date: "2025-08-05", timeIn: "09:05", timeOut: "17:05", status: "Present" },
+  { id: 1, date: "2025-08-04", timeIn: "-", timeOut: "-", status: "Absent" },
+  { id: 1, date: "2025-08-03", timeIn: "09:00", timeOut: "16:45", status: "Present" },
+  { id: 1, date: "2025-08-02", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 1, date: "2025-08-01", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+
+  // Attendance data for Bob (id:2)
+  { id: 2, date: "2025-08-10", timeIn: "-", timeOut: "-", status: "Absent" },
+  { id: 2, date: "2025-08-09", timeIn: "09:30", timeOut: "17:30", status: "Present" },
+  { id: 2, date: "2025-08-08", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 2, date: "2025-08-07", timeIn: "09:05", timeOut: "17:05", status: "Present" },
+  { id: 2, date: "2025-08-06", timeIn: "-", timeOut: "-", status: "Absent" },
+  { id: 2, date: "2025-08-05", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 2, date: "2025-08-04", timeIn: "09:00", timeOut: "16:50", status: "Present" },
+  { id: 2, date: "2025-08-03", timeIn: "-", timeOut: "-", status: "Absent" },
+  { id: 2, date: "2025-08-02", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 2, date: "2025-08-01", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+
+  // Attendance data for Raj (id:3)
+  { id: 3, date: "2025-08-10", timeIn: "10:00", timeOut: "18:00", status: "Present" },
+  { id: 3, date: "2025-08-09", timeIn: "10:05", timeOut: "18:10", status: "Present" },
+  { id: 3, date: "2025-08-08", timeIn: "-", timeOut: "-", status: "Absent" },
+  { id: 3, date: "2025-08-07", timeIn: "10:00", timeOut: "18:00", status: "Present" },
+  { id: 3, date: "2025-08-06", timeIn: "10:00", timeOut: "18:00", status: "Present" },
+  { id: 3, date: "2025-08-05", timeIn: "10:00", timeOut: "18:00", status: "Present" },
+  { id: 3, date: "2025-08-04", timeIn: "-", timeOut: "-", status: "Absent" },
+  { id: 3, date: "2025-08-03", timeIn: "10:00", timeOut: "17:45", status: "Present" },
+  { id: 3, date: "2025-08-02", timeIn: "10:00", timeOut: "18:00", status: "Present" },
+  { id: 3, date: "2025-08-01", timeIn: "10:00", timeOut: "18:00", status: "Present" },
+
+  // Attendance data for Kumar (id:4)
+  { id: 4, date: "2025-08-10", timeIn: "08:00", timeOut: "16:00", status: "Present" },
+  { id: 4, date: "2025-08-09", timeIn: "08:00", timeOut: "16:00", status: "Present" },
+  { id: 4, date: "2025-08-08", timeIn: "08:00", timeOut: "16:00", status: "Present" },
+  { id: 4, date: "2025-08-07", timeIn: "-", timeOut: "-", status: "Absent" },
+  { id: 4, date: "2025-08-06", timeIn: "08:10", timeOut: "16:10", status: "Present" },
+  { id: 4, date: "2025-08-05", timeIn: "08:00", timeOut: "16:00", status: "Present" },
+  { id: 4, date: "2025-08-04", timeIn: "08:05", timeOut: "16:05", status: "Present" },
+  { id: 4, date: "2025-08-03", timeIn: "-", timeOut: "-", status: "Absent" },
+  { id: 4, date: "2025-08-02", timeIn: "08:00", timeOut: "16:00", status: "Present" },
+  { id: 4, date: "2025-08-01", timeIn: "08:00", timeOut: "16:00", status: "Present" },
+
+  // Attendance data for Anu (id:5)
+  { id: 5, date: "2025-08-10", timeIn: "07:30", timeOut: "15:30", status: "Present" },
+  { id: 5, date: "2025-08-09", timeIn: "07:45", timeOut: "15:45", status: "Present" },
+  { id: 5, date: "2025-08-08", timeIn: "-", timeOut: "-", status: "Absent" },
+  { id: 5, date: "2025-08-07", timeIn: "07:30", timeOut: "15:30", status: "Present" },
+  { id: 5, date: "2025-08-06", timeIn: "07:30", timeOut: "15:30", status: "Present" },
+  { id: 5, date: "2025-08-05", timeIn: "07:30", timeOut: "15:30", status: "Present" },
+  { id: 5, date: "2025-08-04", timeIn: "07:30", timeOut: "15:30", status: "Present" },
+  { id: 5, date: "2025-08-03", timeIn: "-", timeOut: "-", status: "Absent" },
+  { id: 5, date: "2025-08-02", timeIn: "07:30", timeOut: "15:30", status: "Present" },
+  { id: 5, date: "2025-08-01", timeIn: "07:30", timeOut: "15:30", status: "Present" },
+
+  // Attendance data for Ravi (id:6)
+  { id: 6, date: "2025-08-10", timeIn: "08:30", timeOut: "16:30", status: "Present" },
+  { id: 6, date: "2025-08-09", timeIn: "08:30", timeOut: "16:30", status: "Present" },
+  { id: 6, date: "2025-08-08", timeIn: "-", timeOut: "-", status: "Absent" },
+  { id: 6, date: "2025-08-07", timeIn: "08:30", timeOut: "16:30", status: "Present" },
+  { id: 6, date: "2025-08-06", timeIn: "08:30", timeOut: "16:30", status: "Present" },
+  { id: 6, date: "2025-08-05", timeIn: "08:30", timeOut: "16:30", status: "Present" },
+  { id: 6, date: "2025-08-04", timeIn: "08:30", timeOut: "16:30", status: "Present" },
+  { id: 6, date: "2025-08-03", timeIn: "08:30", timeOut: "16:30", status: "Present" },
+  { id: 6, date: "2025-08-02", timeIn: "08:30", timeOut: "16:30", status: "Present" },
+  { id: 6, date: "2025-08-01", timeIn: "08:30", timeOut: "16:30", status: "Present" },
+
+  // Attendance data for Gayathri (id:7)
+  { id: 7, date: "2025-08-10", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 7, date: "2025-08-09", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 7, date: "2025-08-08", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 7, date: "2025-08-07", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 7, date: "2025-08-06", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 7, date: "2025-08-05", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 7, date: "2025-08-04", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 7, date: "2025-08-03", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 7, date: "2025-08-02", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+  { id: 7, date: "2025-08-01", timeIn: "09:00", timeOut: "17:00", status: "Present" },
+];

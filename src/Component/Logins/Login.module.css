@@ -1,0 +1,171 @@
+/* Root styles (body, html) should be applied globally, or moved to a wrapper component's global CSS */
+:global(body),
+:global(html) {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f4f4;
+}
+
+/* Container */
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Login Box */
+.loginBox {
+  background: #fff;
+  padding: 30px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
+
+.loginBox h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+/* Label */
+.loginBox label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+/* Inputs */
+.loginBox input[type="tel"],
+.loginBox input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+/* Captcha Section */
+.captchaSection {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.captchaBox {
+  background-color: #e0e0e0;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 10px 15px;
+  border-radius: 5px;
+  user-select: none;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.refreshButton {
+  margin-left: 10px;
+  background: #f0f0f0;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+/* Error Styles */
+.inputError {
+  border: 1px solid red;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: -12px;
+  margin-bottom: 16px;
+  text-align: center;
+  width: 100%;
+}
+
+/* Info Message */
+.infoMessage {
+  color: #555;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Success Message */
+.successMessage {
+  color: green;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* OTP Button */
+.otpButton {
+  width: 100%;
+  background-color: #0066ff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.otpButton:hover {
+  background-color: #0050cc;
+}
+
+/* Submit Button */
+.submitButton {
+  width: 100%;
+  background-color: #28a745;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 8px;
+}
+
+.submitButton:hover {
+  background-color: #218838;
+}
+
+/* OTP Field spacing */
+.loginBox input#otp {
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .loginBox {
+    padding: 25px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .captchaSection {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .refreshButton {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}

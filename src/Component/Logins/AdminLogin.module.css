@@ -1,0 +1,75 @@
+/* Full-page wrapper */
+.adminLoginWrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f6f9;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Card box */
+.adminLoginCard {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Title */
+.adminLoginTitle {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #1f3a93;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Form group spacing */
+.formGroup {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Input styling */
+.inputField {
+  padding: 10px 14px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s;
+}
+
+.inputField:focus {
+  border-color: #1f3a93;
+  outline: none;
+}
+
+/* Button styling */
+.loginBtn {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  background-color: #1f3a93;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.loginBtn:hover {
+  background-color: #163173;
+}
+
+/* Error message */
+.errorMsg {
+  color: red;
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}

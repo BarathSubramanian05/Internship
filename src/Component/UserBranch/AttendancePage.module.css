@@ -1,0 +1,132 @@
+.container {
+  max-width: 700px;
+  margin: 40px auto;
+  background-color: #f0f8ff;
+  padding: 20px 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 80, 160, 0.2);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #003366;
+}
+
+.heading {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #004080;
+  font-weight: 700;
+}
+
+/* ✅ Responsive table wrapper */
+.tableResponsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  min-width: 550px;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 60, 120, 0.1);
+}
+
+.theadRow {
+  background-color: #004080;
+  color: white;
+  font-weight: 600;
+}
+
+.th,
+.td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #cce0ff;
+  vertical-align: middle;
+}
+
+.trHover:hover {
+  background-color: #e6f0ff;
+}
+
+/* ✅ Styling for Total Working Hours column */
+.workingHours {
+  font-weight: 600;
+  color: #004080;
+}
+
+.btnPrimary {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.btnPrimary:hover {
+  background-color: #0056b3;
+}
+
+.textSuccess {
+  color: #007b00;
+  font-weight: 700;
+}
+
+/* ✅ Responsive styles */
+@media (max-width: 768px) {
+  .container {
+    margin: 20px 10px;
+    padding: 15px 20px;
+  }
+
+  .heading {
+    font-size: 1.4rem;
+  }
+
+  .th,
+  .td {
+    padding: 10px 8px;
+    font-size: 0.9rem;
+  }
+
+  .workingHours {
+    font-size: 0.85rem;
+  }
+
+  .btnPrimary {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    margin: 15px 5px;
+    padding: 12px 15px;
+  }
+
+  .heading {
+    font-size: 1.2rem;
+  }
+
+  .th,
+  .td {
+    padding: 8px 6px;
+    font-size: 0.8rem;
+  }
+
+  .workingHours {
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+
+  .btnPrimary {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
+}

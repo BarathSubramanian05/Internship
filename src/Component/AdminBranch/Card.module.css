@@ -1,0 +1,92 @@
+.cardWrapper {
+  position: relative;  /* parent for absolute bell */
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #f3f6fd, #e0ebff);
+  padding: 60px 20px 40px;
+  box-sizing: border-box;
+}
+
+/* ===============================
+   📌 Bell Notification Icon
+   =============================== */
+.bellWrapper {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.bellIcon {
+  font-size: 32px;       /* Bigger for visibility */
+  color: #0078d7;        /* Professional Azure Blue */
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.bellIcon:hover {
+  transform: scale(1.2);
+  color: #005a9e;        /* Darker azure on hover */
+}
+
+/* ===============================
+   📌 Cards Container
+   =============================== */
+.cardContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 60px; /* space below bell */
+}
+
+/* ===============================
+   📌 Card Styles
+   =============================== */
+.card {
+  width: 100%;
+  max-width: 600px;
+  height: 100px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 30px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #0078d7; /* Azure Blue */
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border-left: 6px solid #0078d7;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  background-color: #fdfdfd;
+}
+
+/* ===============================
+   📌 Add Card (Special Styling)
+   =============================== */
+.addCard {
+  border: 2px dashed #0078d7;
+  background-color: #ecf6fd;
+  color: #0078d7;
+  border-left: none;
+  justify-content: center;
+}
+
+.addIcon {
+  font-size: 48px;
+  color: #0078d7;
+  transition: transform 0.3s ease;
+}
+
+.addCard:hover .addIcon {
+  transform: scale(1.2);
+}

@@ -1,4 +1,3 @@
-/* Full-page container with vertical stacking and background */
 .container {
   display: flex;
   flex-direction: column;
@@ -8,27 +7,29 @@
   box-sizing: border-box;
 }
 
-/* Top bar with centered title and logout button on top-right */
 .topBar {
   display: flex;
-  justify-content: center; /* Center the title */
+  justify-content: center;
   align-items: center;
-  position: relative; /* Needed to position logout button */
+  position: relative;
   margin-bottom: 40px;
 }
 
-/* Centered blue-themed title */
 .title {
-  font-size: 48px;  /* Increased font size */
-  font-weight: 700; /* Slightly reduced boldness */
-  color: #3498db;   /* Matches blue theme */
+  font-size: 48px;
+  font-weight: 700;
+  color: #3498db;
   text-align: center;
 }
 
-/* Logout button top-right corner */
-.logoutBtn {
+.buttonGroup {
   position: absolute;
   right: 0;
+  display: flex;
+  gap: 10px;
+}
+
+.logoutBtn {
   background-color: #ff4d4f;
   color: white;
   border: none;
@@ -43,34 +44,67 @@
   background-color: #d9363e;
 }
 
-/* Container for all cards */
+.deleteBtn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.deleteBtn:hover {
+  background-color: #0056b3;
+}
+
+.cancelBtn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 .cardContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 30px;
   flex-grow: 1;
 }
 
-/* Base Card Style */
+.cardWrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* space between checkbox and card */
+  width: 100%;
+  max-width: 600px;
+}
+
+.checkbox {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+
 .card {
   width: 100%;
   max-width: 600px;
-  height: 130px; /* Slightly taller for vertical centering */
+  height: 130px;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
   display: flex;
-  flex-direction: column;   /* Stack name and type vertically */
-  align-items: center;      /* Center horizontally */
-  justify-content: center;  /* Center vertically */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 10px 30px;
   font-size: 20px;
   font-weight: 600;
   color: #3498db;
-  transition: all 0.3s ease;
-  cursor: pointer;
   border-left: 6px solid #3498db;
   text-align: center;
   box-sizing: border-box;
@@ -82,24 +116,19 @@
   background-color: #fdfdfd;
 }
 
-/* Agency name inside card */
 .cardName {
   font-size: 22px;
   font-weight: 700;
   color: #3498db;
   margin-bottom: 6px;
-  text-align: center;
 }
 
-/* Agency type inside card */
 .cardType {
   font-size: 18px;
   font-weight: 500;
   color: #3498db;
-  text-align: center;
 }
 
-/* Special styling for 'Add Card' */
 .addCard {
   border: 2px dashed #3498db;
   background-color: #ecf6fd;
@@ -109,7 +138,6 @@
   flex-direction: column;
 }
 
-/* Icon inside Add Card */
 .addIcon {
   font-size: 48px;
   color: #3498db;

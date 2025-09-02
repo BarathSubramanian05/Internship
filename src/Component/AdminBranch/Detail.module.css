@@ -1,11 +1,13 @@
 /* Detail.module.css */
 .detailContainer {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  background-color: #eaf4ff; /* light blue background */
+  padding: 20px 40px;
+  width: 100vw;
+  max-width: none;
+  background-color: #eaf4ff;
   min-height: 100vh;
+  box-sizing: border-box;
 }
+
 
 .header {
   display: flex;
@@ -312,4 +314,106 @@ button:hover {
 
 .attendanceTable::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
+}
+
+.content {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.leftPanel {
+  flex: 1;
+  min-width: 300px;
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #28a745;
+}
+
+/* Stretch container full width */
+.detailContainer {
+  padding: 20px 40px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #eaf4ff;
+  min-height: 100vh;
+}
+
+/* Use full screen horizontally */
+.content {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  width: 100%;
+}
+
+/* Left panel (Employee Info) */
+.leftPanel {
+  flex: 1;
+  min-width: 300px;
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #28a745;
+}
+
+/* Right panel (Attendance) */
+.rightPanel {
+  flex: 2.5;
+  width: 100%;
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #007bff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Align filters to top right of attendance */
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+/* Filters layout */
+.filterBox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.filterBox label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.filterBox input,
+.filterBox select {
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.filterBox button {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.filterBox button:hover {
+  background-color: #0056b3;
 }

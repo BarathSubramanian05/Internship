@@ -7,6 +7,8 @@ import styles from "./Card.module.css";
 const AdminCardView = () => {
   const [agencies, setAgencies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deleteMode, setDeleteMode] = useState(false);
+  const [selectedAgencies, setSelectedAgencies] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,7 +16,6 @@ const AdminCardView = () => {
       try {
         const res = await axios.get("http://localhost:8080/agency/");
         setAgencies(res.data);
-        console.log("Agencies data:", res.data);
       } catch (err) {
         console.error("Error fetching agencies:", err);
         alert("Failed to load agencies");
@@ -22,40 +23,99 @@ const AdminCardView = () => {
         setLoading(false);
       }
     };
-
     fetchAgencies();
   }, []);
 
   const handleCardClick = (agency) => {
-    console.log("Clicked agency:", agency);
-    navigate(`/admin-login/display/${agency.agencyId}`);
+    if (!deleteMode) navigate(`/admin-login/display/${agency.agencyId}`);
   };
 
-  const handleLogout = () => {
-    // Optional: Clear auth/session here
-    navigate("/admin-login"); // Navigate to your login route
+  const handleDeleteModeToggle = () => {
+    setDeleteMode(!deleteMode);
+    setSelectedAgencies([]);
   };
+
+  const handleSelect = (agencyId) => {
+    setSelectedAgencies((prev) =>
+      prev.includes(agencyId)
+        ? prev.filter((id) => id !== agencyId)
+        : [...prev, agencyId]
+    );
+  };
+
+  const handleDeleteSelected = async () => {
+    if (selectedAgencies.length === 0) {
+      alert("Select agencies to delete");
+      return;
+    }
+
+    try {
+      await axios.delete("http://localhost:8080/agency/deleteagencies", {
+        data: selectedAgencies,
+        headers: { "Content-Type": "application/json" },
+      });
+      alert("Agencies deleted successfully");
+      window.location.reload(); // reload to update the list
+    } catch (err) {
+      console.error("Error deleting agencies:", err);
+      alert("Failed to delete agencies");
+    }
+  };
+
+  const handleLogout = () => navigate("/admin-login");
 
   if (loading) return <p>Loading agencies...</p>;
 
   return (
     <div className={styles.container}>
+      {/* Top Bar */}
       <div className={styles.topBar}>
         <h2 className={styles.title}>Agencies</h2>
-        <button className={styles.logoutBtn} onClick={handleLogout}>
-          Logout
-        </button>
+        <div className={styles.buttonGroup}>
+          {deleteMode ? (
+            <>
+              <button
+                className={`${styles.deleteBtn} ${styles.confirmBtn}`}
+                onClick={handleDeleteSelected}
+              >
+                Confirm Delete
+              </button>
+              <button
+                className={styles.cancelBtn}
+                onClick={handleDeleteModeToggle}
+              >
+                Cancel
+              </button>
+            </>
+          ) : (
+            <button
+              className={styles.deleteBtn}
+              onClick={handleDeleteModeToggle}
+            >
+              Delete
+            </button>
+          )}
+          <button className={styles.logoutBtn} onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
       </div>
 
+      {/* Cards */}
       <div className={styles.cardContainer}>
-        {agencies.map((agency, index) => (
-          <Card
-            key={index}
-            agency={agency} 
-            onClick={handleCardClick}
-          />
+        {agencies.map((agency) => (
+          <div key={agency.agencyId} className={styles.cardWrapper}>
+            {deleteMode && (
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                checked={selectedAgencies.includes(agency.agencyId)}
+                onChange={() => handleSelect(agency.agencyId)}
+              />
+            )}
+            <Card agency={agency} onClick={() => handleCardClick(agency)} />
+          </div>
         ))}
-        {/* Add agency card */}
         <Card isAddCard />
       </div>
     </div>

@@ -15,8 +15,9 @@ const AttendancePage = () => {
   //     .then((res) => setEmployee(res.data))
   //     .catch((err) => console.error(err));
   // }, []);
-  const todayData =
-    JSON.parse(localStorage.getItem(`attendance_${todayKey}`)) || {};
+  const attendanceKey = `attendance_${employee?.employeeId}_${todayKey}`;
+const todayData = JSON.parse(localStorage.getItem(attendanceKey)) || {};
+
 
   const [checkinTime, setCheckinTime] = useState(todayData.checkinTime || "");
   const [checkoutTime, setCheckoutTime] = useState(todayData.checkoutTime || "");
@@ -55,12 +56,13 @@ const AttendancePage = () => {
         });
 
         if (validateRes.data === "Success") {
-          const currentTime = new Date().toISOString();
+          const currentTime = new Date();
+        const localISOTime = new Date(currentTime.getTime() - currentTime.getTimezoneOffset() * 60000).toISOString().split('.')[0];
           console.log(employee.employeeId);
           console.log(currentTime);
           await axios.post("http://localhost:8080/attendance/addintime",null, {
            params:{ employeeId: employee.employeeId,
-            inTime: currentTime}
+            inTime: localISOTime}
           });
 
 //           await axios.post("http://localhost:8080/attendance/addintime", null, {
@@ -72,10 +74,11 @@ const AttendancePage = () => {
 
 
           setCheckinTime(currentTime);
-          localStorage.setItem(
-            `attendance_${todayKey}`,
-            JSON.stringify({ checkinTime: currentTime })
-          );
+         localStorage.setItem(
+  attendanceKey,
+  JSON.stringify({ checkinTime: currentTime })
+);
+
           setButtonLabel("Checkout");
           alert("✅ Check-in successful! Redirecting in 5 seconds...");
           setTimeout(() => navigate("/user/dashboard"), 5000);
@@ -93,20 +96,22 @@ const AttendancePage = () => {
     const confirmCheckout = window.confirm("Are you sure you want to checkout?");
     if (!confirmCheckout) return;
 
-    const currentTime = new Date().toISOString();
+    const currentTime = new Date();
+    const localISOTime = new Date(currentTime.getTime() - currentTime.getTimezoneOffset() * 60000).toISOString().split('.')[0];
 
     try {
       await axios.post("http://localhost:8080/attendance/addouttime",null, {
         params:{
         employeeId: employee.employeeId,
-        outTime: currentTime}
+        outTime: localISOTime}
       });
 
       setCheckoutTime(currentTime);
       localStorage.setItem(
-        `attendance_${todayKey}`,
-        JSON.stringify({ checkinTime, checkoutTime: currentTime })
-      );
+  attendanceKey,
+  JSON.stringify({ checkinTime, checkoutTime: currentTime })
+);
+
       setButtonLabel("Checked Out");
       alert("✅ Checkout successful! Redirecting in 5 seconds...");
       setTimeout(() => navigate("/user/dashboard"), 5000);

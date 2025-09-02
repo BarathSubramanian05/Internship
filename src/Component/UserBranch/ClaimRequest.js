@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styles from "./ClaimRequest.module.css";
+import axios
+ from "axios";
 
 const ClaimRequest = () => {
   const [userId, setUserId] = useState("");
@@ -9,22 +11,34 @@ const ClaimRequest = () => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userId || !date || !agencyId || !description) {
       setError("Please fill in all fields.");
-      setMessage(""); // Clear any previous success message
+      setMessage(""); 
       return;
     }
     setError("");
 
     const requestData = {
-      userId,
-      date,
-      agencyId,
-      description,
+      employeeId: userId, // must match your Java model field
+      date: date, // should be in yyyy-MM-dd format (input type=date already gives this)
+      approved: false // default value since form does not have this field
     };
-    console.log("Claim Request Submitted:", requestData);
+
+    try {
+      const response = await axios.post("http://localhost:8080/request/addrequest", requestData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("Response:", response.data);
+      setMessage("Your claim request has been sent to the admin.");
+    } catch (err) {
+      console.error("Error submitting request:", err);
+      setError("Failed to send claim request. Try again.");
+    }
+
 
     // Set the success message
     setMessage("Your claim request has been sent to the admin.");

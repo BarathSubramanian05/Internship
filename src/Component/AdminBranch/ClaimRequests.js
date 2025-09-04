@@ -1,70 +1,125 @@
-import React, { useState } from "react";
-import { FaCheck, FaTimes, FaArrowLeft } from "react-icons/fa"; // ✅ Added Back icon
-import { useNavigate } from "react-router-dom"; // ✅ For navigation
+import React, { useEffect, useState } from "react";
+import { FaCheck, FaTimes, FaArrowLeft } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import axios from "axios"; // ✅ Import axios
 import styles from "./ClaimRequests.module.css";
 
 const ClaimRequests = () => {
-  const navigate = useNavigate(); // ✅ Hook for navigation
+  const navigate = useNavigate();
 
-  const [requests, setRequests] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      empId: "EMP101",
-      date: "2025-08-29",
-      agency: "Catering Agency",
-      reason: "Medical emergency leave"
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      empId: "EMP102",
-      date: "2025-08-28",
-      agency: "Sanitary Agency",
-      reason: "Family function"
-    },
-  ]);
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+      const isLoggedIn = sessionStorage.getItem("adminLoggedIn");
+      if (!isLoggedIn) {
+        window.location.replace("/admin-login"); // force login if session missing
+      }
+    }, []);
 
-  const handleApprove = (id) => {
-    alert(`✅ Approved request for ID ${id}`);
-    setRequests(requests.filter((req) => req.id !== id));
-  };
+    const fetchRequests = async () => {
+      try {
+        const res = await axios.get("http://localhost:8080/request/"); 
+        setRequests(res.data || []); 
+      } catch (err) {
+        console.error("Error fetching claim requests:", err);
+        alert("Failed to load claim requests");
+      } finally {
+        setLoading(false);
+      }
+    };
+  useEffect(() => {
+    fetchRequests();
+  }, []);
 
-  const handleReject = (id) => {
-    alert(`❌ Rejected request for ID ${id}`);
-    setRequests(requests.filter((req) => req.id !== id));
+
+  // ✅ Approve request
+  const handleApprove = async (req) => {
+    try {
+      console.log(req.employeeId);
+      await axios.put('http://localhost:8080/request/toggle',null,{
+        params:{
+          employeeId:req.employeeId,
+          date:req.date,
+        }
+      });
+      //setRequests((prev) => prev.filter((r) => r.employeeId !== req.employeeId || r.date !== req.date));
+      await fetchRequests();
+      console.log(req.date);
+    }  catch (err) {
+    if (err.response && err.response.status === 404) 
+      {
+        console.log(err.response.data);
+         console.log("hekoo");
+      const { employeeId, date } = err.response.data;
+      try {
+        await axios.post("http://localhost:8080/attendance/addDate", null, {
+          params: { employeeId, date },
+        });
+        await fetchRequests();
+      } catch (fallbackErr) {
+        console.error("Error creating new request:", fallbackErr);
+        alert("Failed to create request");
+      }
+    } else {
+      console.error("Error approving request:", err);
+      alert("Failed to approve request");
+    }
+    alert(`✅ Approved request for ID ${req.employeeId}`);
+  }
+};
+
+  // ✅ Reject request
+  const handleReject = async (req) => {
+    try {
+      await axios.delete('http://localhost:8080/request/delete',{
+        params:{
+          employeeId:req.employeeId,
+          date:req.date,
+        }
+      });
+      alert(`❌ Rejected request for ID ${req.employeeId}`);
+      //setRequests((prev) => prev.filter((r) => r.employeeId !== req.employeeId || r.date !== req.date));
+       await fetchRequests();
+    } catch (err) {
+      console.error("Error rejecting request:", err);
+      alert("Failed to reject request");
+    }
   };
 
   return (
     <div className={styles.requestsContainer}>
-      
-      <button className={styles.backBtn} onClick={() => navigate("/admin-login/card")}>
+      <button
+        className={styles.backBtn}
+        onClick={() => navigate("/admin-login/card")}
+      >
         <FaArrowLeft /> Back
       </button>
 
       <h2>Claim Requests</h2>
-      {requests.length === 0 ? (
+
+      {loading ? (
+        <p>Loading requests...</p>
+      ) : requests.length === 0 ? (
         <p className={styles.noRequests}>No pending requests 🎉</p>
       ) : (
         requests.map((req) => (
           <div key={req.id} className={styles.requestCard}>
             <div>
               <h3>{req.name}</h3>
-              <p><strong>ID:</strong> {req.empId}</p>
-              <p><strong>Agency:</strong> {req.agency}</p>
+              <p><strong>ID:</strong> {req.employeeId}</p>
               <p><strong>Date:</strong> {req.date}</p>
               <p><strong>Reason:</strong> {req.reason}</p>
             </div>
             <div className={styles.actions}>
               <button
                 className={`${styles.btn} ${styles.approve}`}
-                onClick={() => handleApprove(req.id)}
+                onClick={() => handleApprove(req)}
               >
                 <FaCheck />
               </button>
               <button
                 className={`${styles.btn} ${styles.reject}`}
-                onClick={() => handleReject(req.id)}
+                onClick={() => handleReject(req)}
               >
                 <FaTimes />
               </button>
@@ -75,4 +130,5 @@ const ClaimRequests = () => {
     </div>
   );
 };
+
 export default ClaimRequests;

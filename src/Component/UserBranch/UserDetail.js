@@ -1,56 +1,208 @@
-// src/Component/UserBranch/Details.js
+// src/Component/UserBranch/UserDetail.js
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { EmployeeContext } from "../../Context/EmployeeContext";
-import styles from "./UserDetail.module.css"; // make sure to import your CSS
+import styles from "./UserDetail.module.css";
+
+// ✅ Helper: Calculate work hours
+const calculateWorkHours = (inTime, outTime) => {
+  if (!inTime || !outTime) return 0;
+  try {
+    const inDate = new Date(inTime);
+    const outDate = new Date(outTime);
+    let diff = (outDate - inDate) / (1000 * 60 * 60);
+    if (diff < 0) diff += 24;
+    return parseFloat(diff.toFixed(2));
+  } catch {
+    return 0;
+  }
+};
+
+// ✅ Helper: Session status
+const getSessionStatus = (workHours, inTime) => {
+  if (!inTime || workHours === 0) {
+    return { fn: "Absent", an: "Absent" };
+  }
+  if (workHours < 1) {
+    return { fn: "Absent", an: "Absent" };
+  }
+  const inDate = new Date(inTime);
+  const checkinMinutes = inDate.getHours() * 60 + inDate.getMinutes();
+
+  if (workHours >= 5) return { fn: "Present", an: "Present" };
+  if (checkinMinutes < 13 * 60) return { fn: "Present", an: "Absent" };
+  return { fn: "Absent", an: "Present" };
+};
+
+// ✅ Formatters
+const formatTime = (dateTime) => {
+  if (!dateTime) return "-";
+  const d = new Date(dateTime);
+  return isNaN(d.getTime())
+    ? "-"
+    : d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+};
+
+const safeDate = (dateStr) => {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  return isNaN(d.getTime()) ? null : d;
+};
 
 const UserDetail = () => {
   const { employee } = useContext(EmployeeContext);
   const [attendance, setAttendance] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // axios.post("http://localhost:8080/attendance/addintime",null, {
-  //          params:{ employeeId: employee.employeeId,
-  //           inTime: currentTime}
-  //         });
-  console.log(employee);
-  console.log(attendance);
-  useEffect(() => {
-    if (employee?.employeeId) {
-      axios.get(`http://localhost:8080/attendance/${employee.employeeId}`)
-        .then((res) => {
-          const records = res.data.attendance.map((day) => ({
-            inTime: day.inTime,
-            outTime: day.outTime,
-            status: day.inTime ? (day.outTime ? "Present" : "Checked In") : "Absent",
-          }));
-          setAttendance(records);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.error(err);
-          setLoading(false);
-        });
-    }
-  }, [employee]);
+  // ✅ Filters + Pagination
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 10;
 
-  const calculateHours = (inTime, outTime) => {
-    if (!inTime || !outTime) return "-";
-    const start = new Date(inTime);
-    const end = new Date(outTime);
-    let diffMs = end - start;
-    if (diffMs < 0) return "-";
-    const hours = Math.floor(diffMs / (1000 * 60 * 60));
-    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    return `${hours}h ${minutes}m`;
+useEffect(() => {
+  if (employee?.employeeId) {
+    axios
+      .get(`http://localhost:8080/attendance/${employee.employeeId}`)
+      .then((res) => {
+        const todayISO = new Date().toISOString().slice(0, 10);
+
+        // 1. Map backend records
+        const mapped = res.data.attendance.map((rec) => {
+          let normalizedDate = null;
+          if (rec.date) {
+            normalizedDate = rec.date;
+          } else if (rec.inTime) {
+            const d = new Date(rec.inTime);
+            normalizedDate = `${d.getFullYear()}-${String(
+              d.getMonth() + 1
+            ).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+          }
+
+          const workHours = calculateWorkHours(rec.inTime, rec.outTime);
+
+          let sessionStatus = { fn: "--", an: "--" };
+          let overallStatus = "--";
+
+          if (rec.outTime || normalizedDate !== todayISO) {
+            sessionStatus = getSessionStatus(workHours, rec.inTime);
+            overallStatus =
+              sessionStatus.fn === "Absent" && sessionStatus.an === "Absent"
+                ? "Absent"
+                : "Present";
+          }
+
+          return {
+            date: normalizedDate,
+            inTime: rec.inTime,
+            outTime: rec.outTime,
+            workHours,
+            status: overallStatus,
+            ...sessionStatus,
+          };
+        });
+
+        // 2. Sort by date to find the first attendance date
+        const sorted = [...mapped].sort((a, b) => {
+          if (!a.date) return 1;
+          if (!b.date) return -1;
+          return new Date(a.date) - new Date(b.date);
+        });
+
+        if (sorted.length === 0) {
+          setAttendance([]);
+          return;
+        }
+
+        const firstDate = new Date(sorted[0].date);
+        const today = new Date();
+
+        // 3. Generate all dates from firstDate to today
+        const allDates = [];
+        for (let d = new Date(firstDate); d <= today; d.setDate(d.getDate() + 1)) {
+          allDates.push(new Date(d));
+        }
+
+        // 4. Fill missing dates with Absent
+        const complete = allDates.map((d) => {
+          const iso = d.toISOString().slice(0, 10);
+          const found = mapped.find((rec) => rec.date === iso);
+          if (found) return found;
+
+          return {
+            date: iso,
+            inTime: null,
+            outTime: null,
+            workHours: 0,
+            status: "Absent",
+            fn: "Absent",
+            an: "Absent",
+          };
+        });
+
+        setAttendance(complete);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  }
+}, [employee]);
+
+
+  // ✅ Filtering
+  let filteredRecords = attendance;
+
+  if (selectedDate) {
+    filteredRecords = filteredRecords.filter((r) => {
+      const d = safeDate(r.date);
+      return d ? d.toISOString().slice(0, 10) === selectedDate : false;
+    });
+  }
+
+  if (selectedMonth) {
+    filteredRecords = filteredRecords.filter((r) => {
+      const d = safeDate(r.date);
+      return d ? d.getMonth() + 1 === parseInt(selectedMonth, 10) : false;
+    });
+  }
+
+  if (selectedYear) {
+    filteredRecords = filteredRecords.filter((r) => {
+      const d = safeDate(r.date);
+      return d ? d.getFullYear() === parseInt(selectedYear, 10) : false;
+    });
+  }
+
+  const totalPages = Math.ceil(filteredRecords.length / recordsPerPage);
+  const currentRecords = filteredRecords.slice(
+    (currentPage - 1) * recordsPerPage,
+    currentPage * recordsPerPage
+  );
+
+  const handleClearFilters = () => {
+    setSelectedDate("");
+    setSelectedMonth("");
+    setSelectedYear("");
+    setCurrentPage(1);
   };
 
-  if (!employee) return <p className={styles.error}>No employee found. Please log in again.</p>;
+  // ✅ Years dropdown options
+  const yearsSet = new Set();
+  attendance.forEach((r) => {
+    const d = safeDate(r.date);
+    if (d) yearsSet.add(d.getFullYear());
+  });
+  const sortedYears = Array.from(yearsSet).sort((a, b) => b - a);
+
+  if (!employee)
+    return (
+      <p className={styles.error}>No employee found. Please log in again.</p>
+    );
   if (loading) return <p>Loading attendance...</p>;
 
   return (
     <div className={styles.detailContainer}>
-      {/* Left panel: Employee Info */}
+      {/* Left Panel: Employee Info */}
       <div className={styles.leftPanel}>
         <h2>Employee Info</h2>
         <p><strong>ID:</strong> {employee.employeeId}</p>
@@ -59,37 +211,101 @@ const UserDetail = () => {
         <p><strong>Position:</strong> {employee.role}</p>
       </div>
 
-      {/* Right panel: Attendance Table */}
+      {/* Right Panel: Attendance */}
       <div className={styles.rightPanel}>
-        <h3>Attendance Records</h3>
+        <div className={styles.headerRow}>
+          <h3>Attendance Records</h3>
+          <div className={styles.filterBox}>
+            <label>Date:</label>
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+            />
+            <label>Month:</label>
+            <select
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+            >
+              <option value="">All</option>
+              {Array.from({ length: 12 }, (_, i) => (
+                <option key={i + 1} value={i + 1}>
+                  {new Date(0, i).toLocaleString("default", { month: "long" })}
+                </option>
+              ))}
+            </select>
+            <label>Year:</label>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
+              <option value="">All</option>
+              {sortedYears.map((yr) => (
+                <option key={yr} value={yr}>
+                  {yr}
+                </option>
+              ))}
+            </select>
+            <button onClick={handleClearFilters}>Clear</button>
+          </div>
+        </div>
+
         {attendance.length === 0 ? (
           <p>No attendance records found.</p>
+        ) : currentRecords.length === 0 ? (
+          <p>No records found.</p>
         ) : (
-          <table className={styles.attendanceTable}>
-            <thead>
-              <tr>
-                <th>Day</th>
-                <th>Status</th>
-                <th>Time In</th>
-                <th>Time Out</th>
-                <th>Working Hours</th>
-              </tr>
-            </thead>
-            <tbody>
-              {attendance.map((day, index) => (
-                <tr
-                  key={index}
-                  className={day.status === "Absent" ? styles.absentRow : ""}
-                >
-                  <td>{index + 1}</td>
-                  <td>{day.status}</td>
-                  <td>{day.inTime ? new Date(day.inTime).toLocaleTimeString() : "-"}</td>
-                  <td>{day.outTime ? new Date(day.outTime).toLocaleTimeString() : "-"}</td>
-                  <td>{calculateHours(day.inTime, day.outTime)}</td>
+          <>
+            <table className={styles.attendanceTable}>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Time In</th>
+                  <th>Time Out</th>
+                  <th>Work Hours</th>
+                  <th>FN</th>
+                  <th>AN</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {currentRecords.map((rec, idx) => (
+                  <tr
+                    key={idx}
+                    className={rec.status === "Absent" ? styles.absentRow : ""}
+                  >
+                    <td>{rec.date || "--"}</td>
+                    <td>{rec.status}</td>
+                    <td>{formatTime(rec.inTime)}</td>
+                    <td>{formatTime(rec.outTime)}</td>
+                    <td>{rec.workHours}</td>
+                    <td>{rec.fn}</td>
+                    <td>{rec.an}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {totalPages > 1 && (
+              <div className={styles.pagination}>
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                >
+                  Prev
+                </button>
+                <span>
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

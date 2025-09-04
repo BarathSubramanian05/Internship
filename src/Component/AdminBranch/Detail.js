@@ -20,6 +20,9 @@ const calculateWorkHours = (inTime, outTime) => {
   }
 };
 
+
+ const today = new Date().toISOString().split("T")[0];
+
 // Helper: Session status
 const getSessionStatus = (workHours, inTime) => {
   if (!inTime || workHours === 0) {
@@ -29,6 +32,10 @@ const getSessionStatus = (workHours, inTime) => {
   const inDate = new Date(inTime);
   const inHour = inDate.getHours();
   const inMinute = inDate.getMinutes();
+
+    if (workHours < 1) {
+    return { fn: "Absent", an: "Absent" };
+  }
 
   // If total work hours >= 5 → both sessions present
   if (workHours >= 5) {
@@ -69,6 +76,7 @@ const Detail = () => {
   const [attendance, setAttendance] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [minDate, setMinDate] = useState("");
 
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedMonth, setSelectedMonth] = useState("");
@@ -76,6 +84,13 @@ const Detail = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const recordsPerPage = 10;
+
+  useEffect(() => {
+    const isLoggedIn = sessionStorage.getItem("adminLoggedIn");
+    if (!isLoggedIn) {
+      window.location.replace("/admin-login"); // force login if session missing
+    }
+  }, []);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -88,24 +103,82 @@ const Detail = () => {
         setEmployee(empResp.data);
 
         const attResp = await axios.get(`http://localhost:8080/attendance/${id}`);
-        if (attResp.data?.attendance) {
+        if (attResp.data?.attendance && attResp.data.attendance.length > 0) {
+          // 1. Map backend records
           const mapped = attResp.data.attendance.map((rec) => {
-            const status = rec.inTime ? "Present" : "Absent";
-            const workHours = calculateWorkHours(rec.inTime, rec.outTime);
-            const sessionStatus = getSessionStatus(workHours, rec.inTime);
-return {
-  ...rec,
-  status: rec.inTime ? "Present" : "Absent",
-  workHours,
-  ...sessionStatus,
-};
+  const workHours = calculateWorkHours(rec.inTime, rec.outTime);
 
+  let sessionStatus = { fn: "--", an: "--" };
+  let overallStatus = "--";
+
+  const normalizedDate = rec.date
+    ? rec.date
+    : rec.inTime
+    ? new Date(rec.inTime).toISOString().slice(0, 10)
+    : null;
+
+  const todayISO = new Date().toISOString().slice(0, 10);
+
+  if (rec.outTime || normalizedDate !== todayISO) {
+    // ✅ Only evaluate status when checkout exists OR it's not today
+    sessionStatus = getSessionStatus(workHours, rec.inTime);
+    overallStatus =
+      sessionStatus.fn === "Absent" && sessionStatus.an === "Absent"
+        ? "Absent"
+        : "Present";
+  }
+
+  return {
+    date: normalizedDate,
+    inTime: rec.inTime,
+    outTime: rec.outTime,
+    status: overallStatus,
+    workHours,
+    fn: sessionStatus.fn,
+    an: sessionStatus.an,
+  };
+});
+
+
+          // 2. Find first attendance date
+          const sorted = [...mapped].sort((a, b) => {
+  if (!a.date) return 1;  // push missing dates to the end
+  if (!b.date) return -1;
+  return new Date(a.date) - new Date(b.date);
+});
+
+          const firstDate = new Date(sorted[0].date);
+          const isoFirstDate = firstDate.toISOString().split("T")[0];
+setMinDate(isoFirstDate);
+          const today = new Date();
+
+          // 3. Generate all dates from firstDate → today
+          const allDates = [];
+          for (let d = new Date(firstDate); d <= today; d.setDate(d.getDate() + 1)) {
+            allDates.push(new Date(d));
+          }
+
+          // 4. Fill missing dates as Absent
+          const complete = allDates.map((d) => {
+            const iso = d.toISOString().slice(0, 10);
+            const found = mapped.find((rec) => rec.date === iso);
+            if (found) return found;
+            return {
+              date: iso,
+              inTime: null,
+              outTime: null,
+              status: "Absent",
+              workHours: 0,
+              fn: "Absent",
+              an: "Absent",
+            };
           });
-          setAttendance(mapped);
+
+          setAttendance(complete);
         }
       } catch (err) {
         console.error(err);
-        setError("Failed to fetch employee or attendance data");
+        setError("No attendance Data found for this employee.");
       } finally {
         setLoading(false);
       }
@@ -123,21 +196,21 @@ return {
 
   if (selectedDate) {
     filteredRecords = filteredRecords.filter((r) => {
-      const d = safeDate(r.inTime);
+      const d = safeDate(r.date);
       return d ? d.toISOString().slice(0, 10) === selectedDate : false;
     });
   }
 
   if (selectedMonth) {
     filteredRecords = filteredRecords.filter((r) => {
-      const d = safeDate(r.inTime);
+      const d = safeDate(r.date);
       return d ? d.getMonth() + 1 === parseInt(selectedMonth, 10) : false;
     });
   }
 
   if (selectedYear) {
     filteredRecords = filteredRecords.filter((r) => {
-      const d = safeDate(r.inTime);
+      const d = safeDate(r.date);
       return d ? d.getFullYear() === parseInt(selectedYear, 10) : false;
     });
   }
@@ -168,6 +241,9 @@ return {
 
   return (
     <div className={styles.detailContainer}>
+      <button className={styles.backBtn} onClick={() => navigate(-1)}>
+          ← Back
+        </button>
       <div className={styles.content}>
         <div className={styles.leftPanel}>
           <h3>Employee Info</h3>
@@ -192,6 +268,8 @@ return {
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
+                max={today}
+                min={minDate}
               />
               <label>Month:</label>
               <select
@@ -242,7 +320,7 @@ return {
                 <tbody>
                   {currentRecords.map((rec, idx) => (
                     <tr key={idx} className={rec.status === "Absent" ? styles.absentRow : ""}>
-                      <td>{formatDate(rec.inTime)}</td>
+                      <td>{rec.date ? rec.date : "--"}</td>
                       <td>{rec.status}</td>
                       <td>{formatTime(rec.inTime)}</td>
                       <td>{formatTime(rec.outTime)}</td>
@@ -256,21 +334,23 @@ return {
 
               {totalPages > 1 && (
                 <div className={styles.pagination}>
-                  {currentPage > 1 && (
-                    <button onClick={() => setCurrentPage(currentPage - 1)}>Prev</button>
-                  )}
-                  {Array.from({ length: totalPages }, (_, i) => (
-                    <button
-                      key={i + 1}
-                      onClick={() => setCurrentPage(i + 1)}
-                      className={currentPage === i + 1 ? styles.activePage : ""}
-                    >
-                      {i + 1}
-                    </button>
-                  ))}
-                  {currentPage < totalPages && (
-                    <button onClick={() => setCurrentPage(currentPage + 1)}>Next</button>
-                  )}
+                  <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                  >
+                    Prev
+                  </button>
+
+                  <span>
+                    Page {currentPage} of {totalPages || 1}
+                  </span>
+
+                  <button
+                    disabled={currentPage === totalPages || totalPages === 0}
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                  >
+                    Next
+                  </button>
                 </div>
               )}
             </>

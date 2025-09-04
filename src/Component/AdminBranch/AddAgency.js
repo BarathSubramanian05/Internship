@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import "./AddAgency.css";
@@ -15,7 +15,12 @@ function AddAgency() {
   const [status, setStatus] = useState(true);
   
   const navigate = useNavigate();
-
+useEffect(() => {
+    const isLoggedIn = sessionStorage.getItem("adminLoggedIn");
+    if (!isLoggedIn) {
+      window.location.replace("/admin-login"); // force login if session missing
+    }
+  }, []);
   // Handle agency form submission
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -98,3 +98,83 @@
     font-size: 16px;
   }
 }
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+/* Filters layout */
+.filterBox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.filterBox label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.filterBox input,
+.filterBox select {
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.filterBox button {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.filterBox button:hover {
+  background-color: #0056b3;
+}
+
+/* Pagination controls */
+.pagination {
+  display: flex;
+  justify-content: center;   
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  flex-wrap: wrap;           
+}
+
+.pagination button {
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+  color: #007bff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.pagination button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.activePage {
+  background-color: #007bff !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.pagination span {
+  padding: 6px 10px;
+  color: #6c757d;
+}

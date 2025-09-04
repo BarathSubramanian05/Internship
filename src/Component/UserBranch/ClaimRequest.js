@@ -1,29 +1,33 @@
 import React, { useState } from "react";
 import styles from "./ClaimRequest.module.css";
+import { useContext } from "react";
+import { EmployeeContext } from "../../Context/EmployeeContext";
 import axios
  from "axios";
 
 const ClaimRequest = () => {
-  const [userId, setUserId] = useState("");
+  const { employee } = useContext(EmployeeContext);
+  //console.log(employee);
+  const [userId, setUserId] = useState(employee.employeeId);
   const [date, setDate] = useState("");
-  const [agencyId, setagencyId] = useState("");
   const [description, setDescription] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const today = new Date().toISOString().split("T")[0];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!userId || !date || !agencyId || !description) {
+    if (!userId || !date  || !description) {
       setError("Please fill in all fields.");
       setMessage(""); 
       return;
     }
     setError("");
-
+    
     const requestData = {
       employeeId: userId, // must match your Java model field
       date: date, // should be in yyyy-MM-dd format (input type=date already gives this)
-      approved: false // default value since form does not have this field
+      reason:description // default value since form does not have this field
     };
 
     try {
@@ -51,7 +55,6 @@ const ClaimRequest = () => {
     // Reset form fields after submission
     setUserId("");
     setDate("");
-    setagencyId("");
     setDescription("");
   };
 
@@ -66,7 +69,7 @@ const ClaimRequest = () => {
             id="userId"
             placeholder="Enter your User ID"
             value={userId}
-            onChange={(e) => setUserId(e.target.value)}
+            readOnly
             required
           />
 
@@ -76,16 +79,7 @@ const ClaimRequest = () => {
             id="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            required
-          />
-
-          <label htmlFor="agencyId">Agency Id</label>
-          <input
-            type="text"
-            id="agencyId"
-            placeholder="Enter your User ID"
-            value={agencyId}
-            onChange={(e) => setagencyId(e.target.value)}
+            max={today}
             required
           />
 

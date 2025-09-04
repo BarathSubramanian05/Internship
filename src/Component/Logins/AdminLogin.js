@@ -36,7 +36,8 @@ const AdminLogin = () => {
         const res = await axios.post(`http://localhost:8080/login/admin-login?userName=${userName}&password=${password}`);
         if(res.status===200){
           //alert("Success");
-          navigate("/admin-login/card");
+          sessionStorage.setItem("adminLoggedIn", "true"); // ✅ store login state
+          navigate("/admin-login/card", { replace: true });
         }
         else{
           alert("Invalid credentials")

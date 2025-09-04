@@ -10,12 +10,19 @@ const Display = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [agencyName, setAgencyName] = useState("");
-  
+
   // Pagination and search
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [searchTerm, setSearchTerm] = useState("");
 
+  useEffect(() => {
+    const isLoggedIn = sessionStorage.getItem("adminLoggedIn");
+    if (!isLoggedIn) {
+      window.location.replace("/admin-login"); // force login if session missing
+    }
+  }, []);
+  
   useEffect(() => {
     const fetchData = async () => {
       if (!agencyId || agencyId === "undefined") {
@@ -47,7 +54,7 @@ const Display = () => {
   // Filter employees based on search term (ID or Name)
   const filteredEmployees = employees.filter(
     (emp) =>
-      (emp.id?.toString().includes(searchTerm) ||
+    (emp.id?.toString().includes(searchTerm) ||
       emp.employeeId?.toString().includes(searchTerm) ||
       emp.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       emp.employeeName?.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -164,16 +171,18 @@ const Display = () => {
       <div className={styles.pagination}>
         <button
           disabled={currentPage === 1}
-          onClick={() => setCurrentPage((prev) => prev - 1)}
+          onClick={() => setCurrentPage(currentPage - 1)}
         >
           Prev
         </button>
+
         <span>
           Page {currentPage} of {totalPages || 1}
         </span>
+
         <button
           disabled={currentPage === totalPages || totalPages === 0}
-          onClick={() => setCurrentPage((prev) => prev + 1)}
+          onClick={() => setCurrentPage(currentPage + 1)}
         >
           Next
         </button>

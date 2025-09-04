@@ -12,6 +12,14 @@ const AdminCardView = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+  const isLoggedIn = sessionStorage.getItem("adminLoggedIn");
+  if (!isLoggedIn) {
+    window.location.replace("/admin-login"); // force login if session missing
+  }
+}, []);
+
+
+  useEffect(() => {
     const fetchAgencies = async () => {
       try {
         const res = await axios.get("http://localhost:8080/agency/");
@@ -62,11 +70,19 @@ const AdminCardView = () => {
     }
   };
 
-  const handleLogout = () => navigate("/admin-login");
+  const handleLogout = () => {
+  sessionStorage.removeItem("adminLoggedIn"); // ✅ clear login state
+  window.location.replace("/admin-login");
+  }
+
+  const handleRequestClick = () => {
+    navigate("/admin-login/card/claim-requests");
+  }
 
   if (loading) return <p>Loading agencies...</p>;
 
   return (
+    
     <div className={styles.container}>
       {/* Top Bar */}
       <div className={styles.topBar}>
@@ -95,6 +111,12 @@ const AdminCardView = () => {
               Delete
             </button>
           )}
+          <button
+              className={styles.deleteBtn}
+              onClick={handleRequestClick}
+            >
+              View Request
+            </button>
           <button className={styles.logoutBtn} onClick={handleLogout}>
             Logout
           </button>

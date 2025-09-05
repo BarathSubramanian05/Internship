@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./AdminLogin.module.css"; // ✅ Import CSS module
+import styles from "./AdminLogin.module.css"; 
 import axios from "axios";
 
-// Sample hardcoded admin credentials
-const SAMPLE_ADMINS = [
+
+/*const SAMPLE_ADMINS = [
   { username: "admin", email: "admin@example.com", password: "admin123" },
   { username: "superuser", email: "super@example.com", password: "super123" },
-];
+];*/
 
 const AdminLogin = () => {
   const [userName, setuserName] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, /*setError*/] = useState("");
 
   const navigate = useNavigate();
 
@@ -20,23 +20,11 @@ const AdminLogin = () => {
     e.preventDefault();
 
 
-    // const isValidAdmin = SAMPLE_ADMINS.some(
-    //   (admin) =>
-    //     (admin.username === userName || admin.email === userName) &&
-    //     admin.password === password
-    // );
-
-    // if (isValidAdmin) {
-    //   navigate("/admin-login/card");
-    // } else {
-    //   setError("Invalid credentials. Please try again.");
-    // }
-
     try{
         const res = await axios.post(`http://localhost:8080/login/admin-login?userName=${userName}&password=${password}`);
         if(res.status===200){
-          //alert("Success");
-          sessionStorage.setItem("adminLoggedIn", "true"); // ✅ store login state
+          
+          sessionStorage.setItem("adminLoggedIn", "true"); 
           navigate("/admin-login/card", { replace: true });
         }
         else{

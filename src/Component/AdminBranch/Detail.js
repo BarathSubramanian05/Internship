@@ -61,12 +61,13 @@ const formatTime = (dateTime) => {
   if (isNaN(date.getTime())) return "--";
   return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 };
-
+/*
 const formatDate = (dateTime) => {
   if (!dateTime) return "--";
   const date = new Date(dateTime);
   return isNaN(date.getTime()) ? "--" : date.toLocaleDateString();
 };
+*/
 
 const Detail = () => {
   const { id } = useParams();
@@ -119,8 +120,13 @@ const Detail = () => {
 
   const todayISO = new Date().toISOString().slice(0, 10);
 
-  if (rec.outTime || normalizedDate !== todayISO) {
-    // ✅ Only evaluate status when checkout exists OR it's not today
+  if (!rec.inTime && !rec.outTime && rec.date) {
+    sessionStatus = { fn: "--", an: "--" };
+    overallStatus = "Present";
+  }
+
+  else if (rec.outTime || normalizedDate !== todayISO) {
+   
     sessionStatus = getSessionStatus(workHours, rec.inTime);
     overallStatus =
       sessionStatus.fn === "Absent" && sessionStatus.an === "Absent"
@@ -140,9 +146,9 @@ const Detail = () => {
 });
 
 
-          // 2. Find first attendance date
+          
           const sorted = [...mapped].sort((a, b) => {
-  if (!a.date) return 1;  // push missing dates to the end
+  if (!a.date) return 1; 
   if (!b.date) return -1;
   return new Date(a.date) - new Date(b.date);
 });
@@ -152,7 +158,7 @@ const Detail = () => {
 setMinDate(isoFirstDate);
           const today = new Date();
 
-          // 3. Generate all dates from firstDate → today
+          
           const allDates = [];
           for (let d = new Date(firstDate); d <= today; d.setDate(d.getDate() + 1)) {
             allDates.push(new Date(d));

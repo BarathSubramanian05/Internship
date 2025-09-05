@@ -1,4 +1,4 @@
-import React from "react";
+//import React from "react";
 import styles from "./Card.module.css";
 
 const Card = ({ agency, isAddCard = false, onClick }) => {
@@ -11,7 +11,7 @@ const Card = ({ agency, isAddCard = false, onClick }) => {
         if (isAddCard) {
           window.location.href = "/admin-login/card/add-agency";
         } else {
-          onClick(agency); // Pass the entire agency object
+          onClick(agency); 
         }
       }}
     >

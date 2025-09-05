@@ -11,7 +11,7 @@ const Display = () => {
   const [loading, setLoading] = useState(true);
   const [agencyName, setAgencyName] = useState("");
 
-  // Pagination and search
+ 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,7 +19,7 @@ const Display = () => {
   useEffect(() => {
     const isLoggedIn = sessionStorage.getItem("adminLoggedIn");
     if (!isLoggedIn) {
-      window.location.replace("/admin-login"); // force login if session missing
+      window.location.replace("/admin-login"); 
     }
   }, []);
   
@@ -32,12 +32,12 @@ const Display = () => {
       }
       setLoading(true);
       try {
-        // Fetch agency details
+        
         const agencyResponse = await axios.get("http://localhost:8080/agency/");
         const agency = agencyResponse.data.find(a => a.agencyId === agencyId);
         if (agency) setAgencyName(agency.agencyName);
 
-        // Fetch employees
+        
         const employeesResponse = await axios.get(
           `http://localhost:8080/employee/getemployeebyid/${agencyId}`
         );
@@ -51,7 +51,6 @@ const Display = () => {
     fetchData();
   }, [agencyId]);
 
-  // Filter employees based on search term (ID or Name)
   const filteredEmployees = employees.filter(
     (emp) =>
     (emp.id?.toString().includes(searchTerm) ||
@@ -121,7 +120,7 @@ const Display = () => {
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
-            setCurrentPage(1); // reset page when searching
+            setCurrentPage(1); 
           }}
         />
       </div>

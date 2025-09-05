@@ -1,66 +1,82 @@
-import React, { useState,useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./AddAgency.css";
 import axios from "axios";
 
 function AddAgency() {
+  const navigate = useNavigate();
+
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [customType, setCustomType] = useState("");
+
+  // form state
   const [agencyName, setAgencyName] = useState("");
-  const [agencyType, setAgencyType] = useState("");
   const [contactPersonName, setContactPersonName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [pinCode, setPinCode] = useState("");
-  const [status, setStatus] = useState(true);
-  
-  const navigate = useNavigate();
-useEffect(() => {
+
+  const agencyOptions = [
+    "Catering",
+    "Sanitary",
+    "Transport",
+    "Security",
+    "Maintenance",
+    "Other",
+  ];
+
+  // force login check
+  useEffect(() => {
     const isLoggedIn = sessionStorage.getItem("adminLoggedIn");
     if (!isLoggedIn) {
-      window.location.replace("/admin-login"); // force login if session missing
+      window.location.replace("/admin-login");
     }
   }, []);
-  // Handle agency form submission
+
+  // toggle selection
+  const handleTypeToggle = (type) => {
+    if (selectedTypes.includes(type)) {
+      setSelectedTypes(selectedTypes.filter((t) => t !== type));
+    } else {
+      setSelectedTypes([...selectedTypes, type]);
+    }
+
+    if (type !== "Other" && selectedTypes.includes("Other")) {
+      setCustomType("");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Prepare the request body according to the Java model
+
+    const finalTypes = selectedTypes.includes("Other")
+      ? [...selectedTypes.filter((t) => t !== "Other"), customType]
+      : selectedTypes;
+
     const requestBody = {
       agencyName,
-      agencyType,
+      agencyType: finalTypes.join(", "),
       contactPersonName,
       phoneNumber: phoneNumber ? parseInt(phoneNumber) : null,
       email,
-      address,
-      pinCode: pinCode ? parseInt(pinCode) : 0,
-      status
+      status: true,
     };
 
-    console.log("Sending data:", requestBody);
+    console.log("Submitting agency:", requestBody);
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/agency/addagency",
-        requestBody,
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-      
+      await axios.post("http://localhost:8080/agency/addagency", requestBody, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
       alert("Agency added successfully!");
-      console.log("Server response:", response.data);
       navigate("/admin-login/card");
     } catch (err) {
       console.error("Error saving agency:", err);
-      if (err.response && err.response.data) {
-        console.error("Server error details:", err.response.data);
-        alert(`Failed to save agency: ${JSON.stringify(err.response.data)}`);
-      } else {
-        alert("Failed to save agency. Please check the console for details.");
-      }
+      alert("Failed to save agency. Check console for details.");
     }
   };
 
@@ -71,106 +87,98 @@ useEffect(() => {
         <form onSubmit={handleSubmit}>
           {/* Agency Details */}
           <h5 className="mb-3 section-title">Agency Details</h5>
-          
+
           <div className="mb-3">
-            <label className="form-label">Agency Name *</label>
-            <input 
-              type="text" 
-              className="form-control" 
-              value={agencyName} 
+            <label className="form-label">Agency Name</label>
+            <input
+              type="text"
+              className="form-control"
+              value={agencyName}
               onChange={(e) => setAgencyName(e.target.value)}
-              placeholder="Enter agency name" 
-              required 
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Agency Type *</label>
-            <select 
-              className="form-control" 
-              value={agencyType} 
-              onChange={(e) => setAgencyType(e.target.value)}
+              placeholder="Enter agency name"
               required
-            >
-              <option value="">Select Agency Type</option>
-              <option value="Catering">Catering</option>
-              <option value="Sanitary">Sanitary</option>
-              <option value="Security">Security</option>
-              <option value="Transportation">Transportation</option>
-              <option value="Other">Other</option>
-            </select>
+            />
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Contact Person Name *</label>
-            <input 
-              type="text" 
-              className="form-control" 
-              value={contactPersonName} 
+            <label className="form-label">Agency Type</label>
+            <div className="custom-dropdown">
+              <div
+                className="dropdown-header"
+                onClick={() => setShowDropdown(!showDropdown)}
+              >
+                {selectedTypes.filter((t) => t !== "Other").length > 0
+                  ? selectedTypes.filter((t) => t !== "Other").join(", ")
+                  : "Select agency type(s)"}
+                <span className="arrow">{showDropdown ? "▲" : "▼"}</span>
+              </div>
+
+              {showDropdown && (
+                <div className="dropdown-list">
+                  {agencyOptions.map((type, idx) => (
+                    <label key={idx} className="dropdown-item">
+                      <input
+                        type="checkbox"
+                        checked={selectedTypes.includes(type)}
+                        onChange={() => handleTypeToggle(type)}
+                      />
+                      {type}
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Custom input if Other selected */}
+          {selectedTypes.includes("Other") && (
+            <div className="mb-3">
+              <label className="form-label">Custom Agency Type</label>
+              <input
+                type="text"
+                className="form-control"
+                value={customType}
+                onChange={(e) => setCustomType(e.target.value)}
+                placeholder="Enter custom agency type"
+                required
+              />
+            </div>
+          )}
+
+          <div className="mb-3">
+            <label className="form-label">Contact Person Name</label>
+            <input
+              type="text"
+              className="form-control"
+              value={contactPersonName}
               onChange={(e) => setContactPersonName(e.target.value)}
-              placeholder="Enter contact person name" 
-              required 
+              placeholder="Enter contact person name"
+              required
             />
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Phone Number *</label>
-            <input 
-              type="tel" 
-              className="form-control" 
-              value={phoneNumber} 
-              onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
-              placeholder="Enter phone number" 
-              required 
+            <label className="form-label">Phone Number</label>
+            <input
+              type="tel"
+              className="form-control"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ""))}
+              placeholder="Enter phone number"
+              required
             />
           </div>
 
-          <div className="mb-3">
-            <label className="form-label">Email Address *</label>
-            <input 
-              type="email" 
-              className="form-control" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter email address" 
-              required 
-            />
-          </div>
-          
-          <div className="mb-3">
-            <label className="form-label">Address</label>
-            <textarea
-              className="form-control" 
-              value={address} 
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="Enter full address" 
-              rows="3"
-            />
-          </div>
-          
           <div className="mb-4">
-            <label className="form-label">PIN Code</label>
-            <input 
-              type="text" 
-              className="form-control" 
-              value={pinCode} 
-              onChange={(e) => setPinCode(e.target.value.replace(/\D/g, ''))}
-              placeholder="Enter PIN code" 
-              maxLength="6"
+            <label className="form-label">Email</label>
+            <input
+              type="email"
+              className="form-control"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter email address"
+              required
             />
-          </div>
-          
-          <div className="mb-4 form-check">
-            <input 
-              type="checkbox" 
-              className="form-check-input" 
-              checked={status} 
-              onChange={(e) => setStatus(e.target.checked)}
-              id="statusCheck"
-            />
-            <label className="form-check-label" htmlFor="statusCheck">
-              Active Agency
-            </label>
           </div>
 
           {/* Submit */}

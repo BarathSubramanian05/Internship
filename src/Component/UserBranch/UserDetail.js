@@ -1,10 +1,10 @@
-// src/Component/UserBranch/UserDetail.js
+
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { EmployeeContext } from "../../Context/EmployeeContext";
 import styles from "./UserDetail.module.css";
 
-// ✅ Helper: Calculate work hours
+
 const calculateWorkHours = (inTime, outTime) => {
   if (!inTime || !outTime) return 0;
   try {
@@ -18,7 +18,7 @@ const calculateWorkHours = (inTime, outTime) => {
   }
 };
 
-// ✅ Helper: Session status
+
 const getSessionStatus = (workHours, inTime) => {
   if (!inTime || workHours === 0) {
     return { fn: "Absent", an: "Absent" };
@@ -34,7 +34,7 @@ const getSessionStatus = (workHours, inTime) => {
   return { fn: "Absent", an: "Present" };
 };
 
-// ✅ Formatters
+
 const formatTime = (dateTime) => {
   if (!dateTime) return "-";
   const d = new Date(dateTime);
@@ -54,7 +54,6 @@ const UserDetail = () => {
   const [attendance, setAttendance] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Filters + Pagination
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
@@ -68,7 +67,7 @@ useEffect(() => {
       .then((res) => {
         const todayISO = new Date().toISOString().slice(0, 10);
 
-        // 1. Map backend records
+        
         const mapped = res.data.attendance.map((rec) => {
           let normalizedDate = null;
           if (rec.date) {
@@ -85,7 +84,12 @@ useEffect(() => {
           let sessionStatus = { fn: "--", an: "--" };
           let overallStatus = "--";
 
-          if (rec.outTime || normalizedDate !== todayISO) {
+          if (!rec.inTime && !rec.outTime && rec.date) {
+  sessionStatus = { fn: "Present", an: "Present" };
+  overallStatus = "Present";
+}
+
+          else if (rec.outTime || normalizedDate !== todayISO) {
             sessionStatus = getSessionStatus(workHours, rec.inTime);
             overallStatus =
               sessionStatus.fn === "Absent" && sessionStatus.an === "Absent"
@@ -103,7 +107,7 @@ useEffect(() => {
           };
         });
 
-        // 2. Sort by date to find the first attendance date
+        
         const sorted = [...mapped].sort((a, b) => {
           if (!a.date) return 1;
           if (!b.date) return -1;
@@ -118,13 +122,13 @@ useEffect(() => {
         const firstDate = new Date(sorted[0].date);
         const today = new Date();
 
-        // 3. Generate all dates from firstDate to today
+       
         const allDates = [];
         for (let d = new Date(firstDate); d <= today; d.setDate(d.getDate() + 1)) {
           allDates.push(new Date(d));
         }
 
-        // 4. Fill missing dates with Absent
+      
         const complete = allDates.map((d) => {
           const iso = d.toISOString().slice(0, 10);
           const found = mapped.find((rec) => rec.date === iso);
@@ -149,7 +153,7 @@ useEffect(() => {
 }, [employee]);
 
 
-  // ✅ Filtering
+
   let filteredRecords = attendance;
 
   if (selectedDate) {
@@ -186,7 +190,7 @@ useEffect(() => {
     setCurrentPage(1);
   };
 
-  // ✅ Years dropdown options
+
   const yearsSet = new Set();
   attendance.forEach((r) => {
     const d = safeDate(r.date);

@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #eaf4ff; /* light blue background */
+  background-color: #eaf4ff; 
 }
 
 .employee-card {
@@ -15,12 +15,12 @@
 }
 
 h2 {
-  color: #007bff; /* blue heading */
+  color: #007bff; 
 }
 
 .form-label {
   font-weight: 500;
-  color: #0056b3; /* dark blue labels */
+  color: #0056b3; 
 }
 
 .btn-primary {

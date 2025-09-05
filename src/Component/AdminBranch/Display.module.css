@@ -1,4 +1,4 @@
-/* Container */
+
 .displayContainer {
   padding: 20px 40px;
   width: 100%;
@@ -8,7 +8,7 @@
   font-family: Arial, sans-serif;
 }
 
-/* Top bar layout */
+
 .topBar {
   display: flex;
   align-items: center;
@@ -21,7 +21,6 @@
   position: relative;
 }
 
-/* Centered title */
 .topBar h2 {
   flex: 1;
   text-align: center;
@@ -31,7 +30,6 @@
   font-size: 26px;
 }
 
-/* Back & Add buttons */
 .backBtn,
 .addEmployeeBtn {
   padding: 10px 20px;
@@ -66,7 +64,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-/* Search box */
 .filterBox {
   margin: 20px 0;
   display: flex;
@@ -82,7 +79,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Employee table */
 .employeeTable {
   width: 100%;
   border-collapse: collapse;
@@ -127,7 +123,6 @@
   font-weight: 600;
 }
 
-/* Row interaction */
 .clickableRow {
   cursor: pointer;
   transition: background 0.2s ease;
@@ -144,7 +139,7 @@
   text-align: right;
 }
 
-/* Pagination */
+
 .pagination {
   display: flex;
   justify-content: center;

@@ -3,15 +3,14 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 15px; /* Smaller padding for mobile devices */
+  padding: 15px; 
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   box-sizing: border-box;
 }
 
-/* Base styles for the form container */
 .claimBox {
   background: #fff;
-  padding: 25px 20px; /* Reduced padding for smaller screens */
+  padding: 25px 20px; 
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
@@ -23,17 +22,17 @@
   text-align: center;
   margin-bottom: 12px;
   color: #333;
-  font-size: 1.5rem; /* Base font size for mobile */
+  font-size: 1.5rem;
 }
 
 .claimBox p {
   text-align: center;
   color: #666;
   margin-bottom: 20px;
-  font-size: 0.9rem; /* Smaller font size for mobile */
+  font-size: 0.9rem; 
 }
 
-/* Form and form elements */
+
 .claimBox form {
   display: flex;
   flex-direction: column;
@@ -44,7 +43,7 @@
   margin-bottom: 6px;
   font-weight: 600;
   color: #555;
-  margin-top: 15px; /* Spacing for each form group */
+  margin-top: 15px; 
 }
 
 .claimBox input,
@@ -58,14 +57,13 @@
   resize: vertical;
 }
 
-/* Style for the read-only user ID input */
+
 .readOnlyInput {
   background-color: #e9ecef;
   color: #495057;
   cursor: not-allowed;
 }
 
-/* Submit button */
 .submitButton {
   width: 100%;
   padding: 12px;
@@ -83,7 +81,7 @@
   background-color: #0056b3;
 }
 
-/* Message box for success/error */
+
 .message {
   text-align: center;
   margin-top: 15px;
@@ -95,14 +93,14 @@
   border: 1px solid #28a745;
 }
 
-/* --- Tablet and Laptop friendly styles --- */
+
 @media (min-width: 600px) {
   .claimContainer {
     padding: 30px;
   }
   
   .claimBox {
-    padding: 30px 25px; /* Increased padding for tablets and larger screens */
+    padding: 30px 25px; 
   }
 
   .claimBox h2 {
@@ -114,10 +112,10 @@
   }
 }
 
-/* --- Desktop and larger screens styles --- */
+
 @media (min-width: 1024px) {
   .claimBox {
-    padding: 40px 35px; /* Larger padding for a more spacious feel on desktops */
+    padding: 40px 35px; 
   }
   
   .claimBox h2 {

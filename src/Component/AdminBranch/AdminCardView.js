@@ -14,7 +14,7 @@ const AdminCardView = () => {
   useEffect(() => {
   const isLoggedIn = sessionStorage.getItem("adminLoggedIn");
   if (!isLoggedIn) {
-    window.location.replace("/admin-login"); // force login if session missing
+    window.location.replace("/admin-login"); 
   }
 }, []);
 
@@ -63,7 +63,7 @@ const AdminCardView = () => {
         headers: { "Content-Type": "application/json" },
       });
       alert("Agencies deleted successfully");
-      window.location.reload(); // reload to update the list
+      window.location.reload(); 
     } catch (err) {
       console.error("Error deleting agencies:", err);
       alert("Failed to delete agencies");
@@ -71,7 +71,7 @@ const AdminCardView = () => {
   };
 
   const handleLogout = () => {
-  sessionStorage.removeItem("adminLoggedIn"); // ✅ clear login state
+  sessionStorage.removeItem("adminLoggedIn"); 
   window.location.replace("/admin-login");
   }
 

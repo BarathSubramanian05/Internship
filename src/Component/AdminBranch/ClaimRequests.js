@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaCheck, FaTimes, FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // ✅ Import axios
+import axios from "axios"; 
 import styles from "./ClaimRequests.module.css";
 
 const ClaimRequests = () => {
@@ -12,7 +12,7 @@ const ClaimRequests = () => {
   useEffect(() => {
       const isLoggedIn = sessionStorage.getItem("adminLoggedIn");
       if (!isLoggedIn) {
-        window.location.replace("/admin-login"); // force login if session missing
+        window.location.replace("/admin-login"); 
       }
     }, []);
 
@@ -32,7 +32,7 @@ const ClaimRequests = () => {
   }, []);
 
 
-  // ✅ Approve request
+  
   const handleApprove = async (req) => {
     try {
       console.log(req.employeeId);
@@ -42,7 +42,7 @@ const ClaimRequests = () => {
           date:req.date,
         }
       });
-      //setRequests((prev) => prev.filter((r) => r.employeeId !== req.employeeId || r.date !== req.date));
+      
       await fetchRequests();
       console.log(req.date);
     }  catch (err) {
@@ -68,7 +68,7 @@ const ClaimRequests = () => {
   }
 };
 
-  // ✅ Reject request
+ 
   const handleReject = async (req) => {
     try {
       await axios.delete('http://localhost:8080/request/delete',{
@@ -78,7 +78,7 @@ const ClaimRequests = () => {
         }
       });
       alert(`❌ Rejected request for ID ${req.employeeId}`);
-      //setRequests((prev) => prev.filter((r) => r.employeeId !== req.employeeId || r.date !== req.date));
+      
        await fetchRequests();
     } catch (err) {
       console.error("Error rejecting request:", err);
@@ -100,7 +100,7 @@ const ClaimRequests = () => {
       {loading ? (
         <p>Loading requests...</p>
       ) : requests.length === 0 ? (
-        <p className={styles.noRequests}>No pending requests 🎉</p>
+        <p className={styles.noRequests}>No pending requests </p>
       ) : (
         requests.map((req) => (
           <div key={req.id} className={styles.requestCard}>

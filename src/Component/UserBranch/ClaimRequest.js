@@ -7,7 +7,7 @@ import axios
 
 const ClaimRequest = () => {
   const { employee } = useContext(EmployeeContext);
-  //console.log(employee);
+  
   const [userId, setUserId] = useState(employee.employeeId);
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
@@ -25,9 +25,9 @@ const ClaimRequest = () => {
     setError("");
     
     const requestData = {
-      employeeId: userId, // must match your Java model field
-      date: date, // should be in yyyy-MM-dd format (input type=date already gives this)
-      reason:description // default value since form does not have this field
+      employeeId: userId, 
+      date: date, 
+      reason:description 
     };
 
     try {
@@ -44,15 +44,14 @@ const ClaimRequest = () => {
     }
 
 
-    // Set the success message
+   
     setMessage("Your claim request has been sent to the admin.");
 
-    // Hide the message after 5 seconds (5000 milliseconds)
     setTimeout(() => {
       setMessage("");
     }, 5000);
 
-    // Reset form fields after submission
+
     setUserId("");
     setDate("");
     setDescription("");

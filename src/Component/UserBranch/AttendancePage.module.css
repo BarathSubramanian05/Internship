@@ -16,7 +16,6 @@
   font-weight: 700;
 }
 
-/* ✅ Responsive table wrapper */
 .tableResponsive {
   width: 100%;
   overflow-x: auto;
@@ -50,7 +49,7 @@
   background-color: #e6f0ff;
 }
 
-/* ✅ Styling for Total Working Hours column */
+
 .workingHours {
   font-weight: 600;
   color: #004080;
@@ -77,7 +76,7 @@
   font-weight: 700;
 }
 
-/* ✅ Responsive styles */
+
 @media (max-width: 768px) {
   .container {
     margin: 20px 10px;

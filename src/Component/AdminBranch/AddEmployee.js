@@ -10,7 +10,7 @@ function AddEmployee() {
   const { aid } = useParams();
   const [employee, setEmployee] = useState({ 
     name: "", 
-    gender: "", // Empty default
+    gender: "", 
     phoneNumber: "", 
     address: "", 
     role: "", 
@@ -28,7 +28,7 @@ function AddEmployee() {
     e.preventDefault();
     
     try {
-      // Convert data types to match backend model
+      
       const employeeData = {
         ...employee,
         phoneNumber: employee.phoneNumber ? parseInt(employee.phoneNumber) : null,
@@ -37,7 +37,7 @@ function AddEmployee() {
       
       console.log("Submitting employee data:", employeeData);
       
-      // Make API call to save the employee
+      
       const response = await axios.post(
         "http://localhost:8080/employee/addemployee", 
         employeeData
@@ -46,7 +46,7 @@ function AddEmployee() {
       console.log("Employee saved successfully:", response.data);
       alert("Employee saved successfully!");
       navigate(`/admin-login/display/${aid}`);
-      // Reset form after successful submission
+      
       
       setEmployee({ 
         name: "", 

@@ -1,8 +1,8 @@
-import React, { useEffect, useState,useContext } from "react";
+import React, { useEffect,useContext } from "react";
 import styles from "./UserDashboard.module.css";
 import { FaUserCircle } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+//import axios from "axios";
 import { EmployeeContext } from "../../Context/EmployeeContext";
 
 const UserDashboard = () => {

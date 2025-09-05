@@ -1,7 +1,7 @@
 // App.js
 import React, { useContext } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { EmployeeContext } from "./Context/EmployeeContext";  // ✅ import context
+import { EmployeeContext } from "./Context/EmployeeContext";  
 
 import Home from "./Component/Logins/Home";
 import AdminLogin from "./Component/Logins/AdminLogin";
@@ -19,7 +19,7 @@ import UserDetail from "./Component/UserBranch/UserDetail";
 import ClaimRequests from './Component/AdminBranch/ClaimRequests'; 
 
 function App() {
-  const { employee } = useContext(EmployeeContext);  // ✅ read employee
+  const { employee } = useContext(EmployeeContext);  
 
   return (      
     <Router>

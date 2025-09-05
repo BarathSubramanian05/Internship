@@ -9,12 +9,6 @@ const AttendancePage = () => {
   const { employee } = useContext(EmployeeContext);
   const todayKey = new Date().toISOString().slice(0, 10);
 
-  // useEffect(() => {
-  //   // Fetch employee from backend (hardcoded id for now)
-  //   axios.get("http://localhost:8080/employees/101")
-  //     .then((res) => setEmployee(res.data))
-  //     .catch((err) => console.error(err));
-  // }, []);
   const attendanceKey = `attendance_${employee?.employeeId}_${todayKey}`;
 const todayData = JSON.parse(localStorage.getItem(attendanceKey)) || {};
 
@@ -50,7 +44,7 @@ const todayData = JSON.parse(localStorage.getItem(attendanceKey)) || {};
       const longitude = pos.coords.longitude;
 
       try {
-        const validateRes = await axios.post("http://localhost:8080/gps/test", {  //dummycheck {Refer backend gps} or /login for inside company
+        const validateRes = await axios.post("http://localhost:8080/gps/login", {  //dummycheck {Refer backend gps} or /login for inside company
           latitude,
           longitude
         });
@@ -65,12 +59,6 @@ const todayData = JSON.parse(localStorage.getItem(attendanceKey)) || {};
             inTime: localISOTime}
           });
 
-//           await axios.post("http://localhost:8080/attendance/addintime", null, {
-//   params: {
-//     employeeId: employee.employeeId,
-//     inTime: currentTime
-//   }
-// });
 
 
           setCheckinTime(currentTime);
@@ -80,10 +68,10 @@ const todayData = JSON.parse(localStorage.getItem(attendanceKey)) || {};
 );
 
           setButtonLabel("Checkout");
-          alert("✅ Check-in successful! Redirecting in 5 seconds...");
+          alert("Check-in successful! Redirecting in 5 seconds...");
           setTimeout(() => navigate("/user/dashboard"), 5000);
         } else {
-          alert("❌ You are outside the allowed perimeter. Cannot check-in.");
+          alert("You are outside the allowed perimeter. Cannot check-in.");
         }
       } catch (error) {
         console.error("Check-in error", error);
@@ -113,7 +101,7 @@ const todayData = JSON.parse(localStorage.getItem(attendanceKey)) || {};
 );
 
       setButtonLabel("Checked Out");
-      alert("✅ Checkout successful! Redirecting in 5 seconds...");
+      alert(" Checkout successful! Redirecting in 5 seconds...");
       setTimeout(() => navigate("/user/dashboard"), 5000);
     } catch (error) {
       console.error("Checkout error", error);

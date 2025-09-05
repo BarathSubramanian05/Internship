@@ -1,4 +1,4 @@
-/* Detail.module.css */
+
 .detailContainer {
   padding: 20px 40px;
   width: 100vw;
@@ -39,7 +39,7 @@
 }
 
 .header h2 {
-  color: #007bff; /* blue heading */
+  color: #007bff; 
   margin: 0;
   font-size: 28px;
   font-weight: 600;
@@ -57,11 +57,11 @@
   padding: 25px;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-top: 5px solid #28a745; /* green accent */
+  border-top: 5px solid #28a745; 
 }
 
 .leftPanel h3 {
-  color: #28a745; /* green heading */
+  color: #28a745;
   margin-top: 0;
   margin-bottom: 20px;
   font-size: 22px;
@@ -76,11 +76,11 @@
   padding: 25px;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-top: 5px solid #007bff; /* blue accent */
+  border-top: 5px solid #007bff; 
 }
 
 .rightPanel h3 {
-  color: #007bff; /* blue heading */
+  color: #007bff; 
   margin-top: 0;
   margin-bottom: 20px;
   font-size: 22px;
@@ -108,7 +108,7 @@
 }
 
 .employeeInfo strong {
-  color: #0056b3; /* dark blue labels */
+  color: #0056b3; 
   font-weight: 600;
   min-width: 100px;
   display: inline-block;
@@ -228,7 +228,6 @@
   font-size: 14px;
 }
 
-/* Button styles */
 button {
   background-color: #007bff;
   color: white;
@@ -333,7 +332,6 @@ button:hover {
   border-top: 5px solid #28a745;
 }
 
-/* Stretch container full width */
 .detailContainer {
   padding: 20px 40px;
   width: 100%;
@@ -342,7 +340,6 @@ button:hover {
   min-height: 100vh;
 }
 
-/* Use full screen horizontally */
 .content {
   display: flex;
   flex-direction: row;
@@ -350,7 +347,7 @@ button:hover {
   width: 100%;
 }
 
-/* Left panel (Employee Info) */
+
 .leftPanel {
   flex: 1;
   min-width: 300px;
@@ -361,7 +358,7 @@ button:hover {
   border-top: 5px solid #28a745;
 }
 
-/* Right panel (Attendance) */
+
 .rightPanel {
   flex: 2.5;
   width: 100%;
@@ -374,7 +371,7 @@ button:hover {
   flex-direction: column;
 }
 
-/* Align filters to top right of attendance */
+
 .headerRow {
   display: flex;
   justify-content: space-between;
@@ -384,7 +381,7 @@ button:hover {
   margin-bottom: 15px;
 }
 
-/* Filters layout */
+
 .filterBox {
   display: flex;
   flex-wrap: wrap;
@@ -418,7 +415,6 @@ button:hover {
   background-color: #0056b3;
 }
 
-/* Pagination controls */
 .pagination {
   display: flex;
   justify-content: center;   

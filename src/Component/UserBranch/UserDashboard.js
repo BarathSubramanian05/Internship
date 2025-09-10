@@ -5,48 +5,70 @@ import styles from "./UserDashboard.module.css";
 import { EmployeeContext } from "../../Context/EmployeeContext";
 import { FaUserCircle } from "react-icons/fa";
 
-/* ---------- Helper Functions ---------- */
-const calculateWorkHours = (inTime, outTime) => {
-  if (!inTime || !outTime) return 0;
+/* ---------- Fixed Helper Functions ---------- */
+const parseDateSafe = (dateString) => {
+  if (!dateString) return null;
   try {
-    const inDate = new Date(inTime);
-    const outDate = new Date(outTime);
-    let diff = (outDate - inDate) / (1000 * 60 * 60);
-    if (diff < 0) diff += 24;
-    return parseFloat(diff.toFixed(2));
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? null : date;
   } catch {
+    return null;
+  }
+};
+
+const calculateSessionMinutes = (inTime, outTime) => {
+  const start = parseDateSafe(inTime);
+  const end = parseDateSafe(outTime);
+  
+  if (!start || !end) return 0;
+  
+  // Handle cases where outTime might be before inTime (invalid data)
+  if (end < start) {
+    console.warn("Out time before in time:", inTime, outTime);
     return 0;
   }
+  
+  return (end - start) / (1000 * 60); // minutes
+};
+
+const calculateWorkHours = (sessions) => {
+  if (!sessions || sessions.length === 0) return 0;
+  
+  let totalMinutes = 0;
+  sessions.forEach(session => {
+    if (session.inTime && session.outTime) {
+      totalMinutes += calculateSessionMinutes(session.inTime, session.outTime);
+    }
+  });
+  
+  const hours = totalMinutes / 60;
+  return parseFloat(hours.toFixed(2));
 };
 
 const getSessionStatus = (workHours, inTime) => {
   if (!inTime || workHours === 0) return { fn: "Absent", an: "Absent" };
   if (workHours < 1) return { fn: "Absent", an: "Absent" };
-  const inDate = new Date(inTime);
+  
+  const inDate = parseDateSafe(inTime);
+  if (!inDate) return { fn: "Absent", an: "Absent" };
+  
   const checkinMinutes = inDate.getHours() * 60 + inDate.getMinutes();
+  
   if (workHours >= 5) return { fn: "Present", an: "Present" };
   if (checkinMinutes < 13 * 60) return { fn: "Present", an: "Absent" };
   return { fn: "Absent", an: "Present" };
 };
-const calculateMinutes = (inTime, outTime) => {
-  if (!inTime || !outTime) return 0;
-  const start = new Date(inTime);
-  const end = new Date(outTime);
-  return (end - start) / (1000 * 60); // minutes
-};
 
 const formatTime = (dateTime) => {
   if (!dateTime) return "--";
-  const d = new Date(dateTime);
-  return isNaN(d.getTime())
-    ? "--"
-    : d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const d = parseDateSafe(dateTime);
+  return !d ? "--" : d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 };
 
 const safeDate = (dateStr) => {
   if (!dateStr) return null;
-  const d = new Date(dateStr);
-  return isNaN(d.getTime()) ? null : d;
+  const d = parseDateSafe(dateStr);
+  return !d ? null : d;
 };
 
 /* ---------- Main Component ---------- */
@@ -77,111 +99,140 @@ useEffect(() => {
   axios
     .get(`http://localhost:8080/attendance/${employee.employeeId}`)
     .then((res) => {
-      const raw = res.data.attendance || [];
-      const grouped = {};
+      console.log("Raw API response:", res.data);
+      
+      const rawMap = res.data.attendanceMap || {};
+      const rawArray = res.data.attendance || [];
+      const groupedByDate = {};
 
-      // 🔹 Group by date
-      raw.forEach((rec) => {
-        const date = rec.date
-          ? rec.date
-          : rec.inTime
-          ? new Date(rec.inTime).toISOString().slice(0, 10)
-          : null;
-        if (!date) return;
-
-        if (!grouped[date]) {
-          grouped[date] = {
-            date,
-            inTime: rec.inTime,
-            outTime: rec.outTime,
-            totalMinutes: calculateMinutes(rec.inTime, rec.outTime),
-          };
-        } else {
-          // earliest in
-          if (
-            rec.inTime &&
-            (!grouped[date].inTime ||
-              new Date(rec.inTime) < new Date(grouped[date].inTime))
-          ) {
-            grouped[date].inTime = rec.inTime;
-          }
-          // latest out
-          if (
-            rec.outTime &&
-            (!grouped[date].outTime ||
-              new Date(rec.outTime) > new Date(grouped[date].outTime))
-          ) {
-            grouped[date].outTime = rec.outTime;
-          }
-          // accumulate work minutes
-          grouped[date].totalMinutes += calculateMinutes(
-            rec.inTime,
-            rec.outTime
+      // Process attendanceMap first (most reliable and already grouped)
+      Object.entries(rawMap).forEach(([date, sessions]) => {
+        if (date && sessions && sessions.length > 0) {
+          const validSessions = sessions.filter(session => 
+            session.inTime && parseDateSafe(session.inTime)
           );
+          
+          if (validSessions.length > 0) {
+            groupedByDate[date] = {
+              date,
+              sessions: validSessions
+            };
+          }
         }
       });
 
-      // 🔹 Convert grouped to array
-      const groupedArray = Object.values(grouped).map((rec) => {
-        const workHours = +(rec.totalMinutes / 60).toFixed(2);
-        const sessionStatus = getSessionStatus(workHours, rec.inTime);
-        const overallStatus =
-          sessionStatus.fn === "Absent" && sessionStatus.an === "Absent"
-            ? "Absent"
-            : "Present";
+      // Process attendance array - only add sessions for dates not in the map
+      rawArray.forEach((rec) => {
+        // Skip if no inTime or if this is just a date record without time
+        if (!rec.inTime) return;
+        
+        let date = null;
+        
+        if (rec.date) {
+          date = rec.date;
+        } else {
+          const inDate = parseDateSafe(rec.inTime);
+          if (inDate) date = inDate.toISOString().slice(0, 10);
+        }
+        
+        if (!date) return;
+
+        // If this date is already processed from attendanceMap, skip it
+        if (groupedByDate[date]) return;
+
+        if (!groupedByDate[date]) {
+          groupedByDate[date] = {
+            date,
+            sessions: []
+          };
+        }
+        
+        // Only add if we have a valid inTime
+        if (parseDateSafe(rec.inTime)) {
+          groupedByDate[date].sessions.push({
+            inTime: rec.inTime,
+            outTime: rec.outTime || null
+          });
+        }
+      });
+
+      console.log("Grouped sessions:", groupedByDate);
+
+      // Process each day
+      const attendanceArray = Object.values(groupedByDate).map(day => {
+        // Sort sessions by inTime
+        const sortedSessions = day.sessions.sort((a, b) => 
+          new Date(a.inTime) - new Date(b.inTime)
+        );
+
+        const firstInTime = sortedSessions[0]?.inTime || null;
+        const lastOutTime = sortedSessions[sortedSessions.length - 1]?.outTime || null;
+
+        // Calculate TOTAL work hours from ALL valid sessions
+        const workHours = calculateWorkHours(sortedSessions);
+        
+        // Determine status
+        const sessionStatus = getSessionStatus(workHours, firstInTime);
+        const overallStatus = workHours > 0 ? "Present" : "Absent";
 
         return {
-          date: rec.date,
-          inTime: rec.inTime, // first check-in
-          outTime: rec.outTime, // last check-out
+          date: day.date,
+          inTime: firstInTime,
+          outTime: lastOutTime,
           workHours,
           status: overallStatus,
           fn: sessionStatus.fn,
           an: sessionStatus.an,
+          sessions: sortedSessions
         };
       });
 
-      // 🔹 Build complete date range
-      const sortedAsc = groupedArray
-        .filter((r) => r.date)
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
+      console.log("Processed attendance:", attendanceArray);
 
-      const earliestDate = sortedAsc.length
-        ? new Date(sortedAsc[0].date)
-        : new Date();
+      // Build complete date range (last 60 days to capture all test data)
       const today = new Date();
+      const sixtyDaysAgo = new Date();
+      sixtyDaysAgo.setDate(today.getDate() - 60);
 
       const allDates = [];
-      for (let d = new Date(earliestDate); d <= today; d.setDate(d.getDate() + 1)) {
+      for (let d = new Date(sixtyDaysAgo); d <= today; d.setDate(d.getDate() + 1)) {
         allDates.push(new Date(d));
       }
 
-      const complete = allDates.map((d) => {
-        const iso = d.toISOString().slice(0, 10);
-        const found = groupedArray.find((rec) => rec.date === iso);
-        if (found) return found;
+      const completeAttendance = allDates.map(d => {
+        const isoDate = d.toISOString().slice(0, 10);
+        const existingRecord = attendanceArray.find(rec => rec.date === isoDate);
+        
+        if (existingRecord) return existingRecord;
+        
         return {
-          date: iso,
+          date: isoDate,
           inTime: null,
           outTime: null,
           workHours: 0,
           status: "Absent",
           fn: "Absent",
           an: "Absent",
+          sessions: []
         };
       });
 
-      setAttendance(
-        complete.sort((a, b) => new Date(b.date) - new Date(a.date))
+      // Sort by date descending (newest first)
+      const sortedAttendance = completeAttendance.sort((a, b) => 
+        new Date(b.date) - new Date(a.date)
       );
 
-      // keep map for popup
-      setAttendanceMap(res.data.attendanceMap || {});
+      console.log("Final attendance data:", sortedAttendance);
+      setAttendance(sortedAttendance);
+      
+      // Store the raw map for popup details
+      setAttendanceMap(rawMap);
     })
-    .catch((err) => console.error(err))
+    .catch((err) => {
+      console.error("Error fetching attendance:", err);
+    })
     .finally(() => setLoading(false));
 }, [employee, navigate]);
-
 
   /* ---------- Reset Page on Filter Change ---------- */
   useEffect(() => setCurrentPage(1), [selectedDate, selectedMonth, selectedYear]);
@@ -214,12 +265,13 @@ useEffect(() => {
     setCurrentPage(1);
   };
 
-  const openPopup = (date) => {
-    setPopupDate(date);
-    const records = attendanceMap[date] || [];
-    setPopupRecords(records);
-    setShowPopup(true);
-  };
+ const openPopup = (date) => {
+  setPopupDate(date);
+  // Get sessions from the attendanceMap for this date
+  const sessions = attendanceMap[date] || [];
+  setPopupRecords(sessions);
+  setShowPopup(true);
+};
 
   /* ---------- UI ---------- */
   if (!employee) return <p className={styles.error}>No employee found. Please log in again.</p>;
@@ -346,41 +398,43 @@ useEffect(() => {
 
       {/* POPUP MODAL */}
       {showPopup && (
-        <div className={styles.popupOverlay}>
-          <div className={styles.popupContent}>
-            <h3>Sessions for {popupDate}</h3>
-            {popupRecords.length > 0 ? (
-              <table className={styles.attendanceTable}>
-                <thead>
-                  <tr>
-                    <th>In Time</th>
-                    <th>Out Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {popupRecords.map((rec, idx) => (
-                    <tr key={idx}>
-                      <td>{formatTime(rec.inTime)}</td>
-                      <td>{formatTime(rec.outTime)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p>No sessions recorded.</p>
-            )}
-            <button onClick={() => setShowPopup(false)}>Close</button>
-          </div>
-        </div>
+  <div className={styles.popupOverlay}>
+    <div className={styles.popupContent}>
+      <h3>Sessions for {popupDate}</h3>
+      {popupRecords.length > 0 ? (
+        <table className={styles.attendanceTable}>
+          <thead>
+            <tr>
+              <th>In Time</th>
+              <th>Out Time</th>
+              <th>Duration (hours)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {popupRecords.map((rec, idx) => {
+              const duration = calculateSessionMinutes(rec.inTime, rec.outTime) / 60;
+              return (
+                <tr key={idx}>
+                  <td>{formatTime(rec.inTime)}</td>
+                  <td>{formatTime(rec.outTime)}</td>
+                  <td>{duration.toFixed(2)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      ) : (
+        <p>No sessions recorded.</p>
       )}
+      <button onClick={() => setShowPopup(false)}>Close</button>
+    </div>
+  </div>
+)}
     </div>
   );
 };
 
 export default UserDashboard;
-
-
-
 
 
 

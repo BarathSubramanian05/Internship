@@ -17,7 +17,7 @@ const Display = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [searchTerm, setSearchTerm] = useState("");
-
+const userRole = sessionStorage.getItem("userRole"); 
   // Edit modal state
   const [editingEmployee, setEditingEmployee] = useState(null);
   const [fieldsToUpdate, setFieldsToUpdate] = useState({
@@ -70,7 +70,9 @@ const Display = () => {
     fetchData();
   }, [agencyId]);
 
-  const filteredEmployees = employees.filter(
+  const filteredEmployees = employees
+  .filter(emp => emp.isActive) // ✅ Only active employees
+  .filter(
     (emp) =>
       (emp.id?.toString().includes(searchTerm) ||
         emp.employeeId?.toString().includes(searchTerm) ||
@@ -226,7 +228,7 @@ const handleChange = (e) => {
             <th>Role</th>
             <th>Contact</th>
             <th>Salary</th>
-            <th>Actions</th>
+            <th style={{textAlign:"center"}}>Actions</th>
           </tr>
         </thead>
         <tbody>

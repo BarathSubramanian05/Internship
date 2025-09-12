@@ -90,6 +90,10 @@
   margin-top: 15px;
 }
 
+.actions{
+  text-align: center;
+}
+
 .employeeTable th {
   background-color: #007bff;
   color: white;

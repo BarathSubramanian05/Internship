@@ -44,7 +44,7 @@ const todayData = JSON.parse(localStorage.getItem(attendanceKey)) || {};
       const longitude = pos.coords.longitude;
 
       try {
-        const validateRes = await axios.post("http://localhost:8080/gps/login", {  //dummycheck {Refer backend gps} or /login for inside company
+        const validateRes = await axios.post("http://localhost:8080/gps/test", {  //dummycheck {Refer backend gps} or /login for inside company
           latitude,
           longitude
         });
@@ -55,7 +55,7 @@ const todayData = JSON.parse(localStorage.getItem(attendanceKey)) || {};
           console.log(employee.employeeId);
           console.log(currentTime);
           await axios.post("http://localhost:8080/attendance/addintime",null, {
-           params:{ employeeId: employee.employeeId,
+           params:{ employeeId: employee.employeeId,agencyId: employee.agencyId,
             inTime: localISOTime}
           });
 

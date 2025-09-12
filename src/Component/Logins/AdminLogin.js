@@ -16,26 +16,38 @@ const AdminLogin = () => {
 
   const navigate = useNavigate();
 
-  const handleLogin = async  (e) => {
-    e.preventDefault();
+  const handleLogin = async (e) => {
+  e.preventDefault();
 
+  try {
+    const res = await axios.post(
+      `http://localhost:8080/login/admin-login?userName=${userName}&password=${password}`
+    );
 
-    try{
-        const res = await axios.post(`http://localhost:8080/login/admin-login?userName=${userName}&password=${password}`);
-        if(res.status===200){
-          
-          sessionStorage.setItem("adminLoggedIn", "true"); 
-          navigate("/admin-login/card", { replace: true });
-        }
-        else{
-          alert("Invalid credentials")
-        }
+    if (res.status === 200) {
+      const message = res.data; // e.g., "login successful-admin"
+      
+      // Extract role from the message
+      let userRole = "admin"; // default
+      if (message.includes("superadmin")) {
+        userRole = "superadmin";
+      }
+
+      // Save login info
+      sessionStorage.setItem("adminLoggedIn", "true");
+      sessionStorage.setItem("userRole", userRole);
+
+      navigate("/admin-login/card", { replace: true });
     }
-    catch(err)
-    {
-      alert("Something wrong");
+  } catch (err) {
+    // If backend returns bad request (400)
+    if (err.response && err.response.status === 400) {
+      alert(err.response.data); // shows "invalid login"
+    } else {
+      alert("Something went wrong");
     }
-  };
+  }
+};
 
   return (
     <div className={styles.adminLoginWrapper}>

@@ -50,18 +50,47 @@ const calculateWorkHours = (sessions) => {
   return parseFloat(hours.toFixed(2));
 };
 
-const getSessionStatus = (workHours, inTime) => {
-  if (!inTime || workHours === 0) return { fn: "Absent", an: "Absent" };
-  if (workHours < 1) return { fn: "Absent", an: "Absent" };
-  
-  const inDate = parseDateSafe(inTime);
-  if (!inDate) return { fn: "Absent", an: "Absent" };
-  
-  const checkinMinutes = inDate.getHours() * 60 + inDate.getMinutes();
-  
-  if (workHours >= 5) return { fn: "Present", an: "Present" };
-  if (checkinMinutes < 13 * 60) return { fn: "Present", an: "Absent" };
-  return { fn: "Absent", an: "Present" };
+const getSessionStatus = (sessions, startTime, endTime) => {
+  if (!sessions || sessions.length === 0) {
+    return { overall: "Absent", fn: "Absent", an: "Absent" };
+  }
+
+  // Calculate midpoint in minutes
+  const [sh, sm] = startTime.split(":").map(Number);
+  const [eh, em] = endTime.split(":").map(Number);
+  const startMinutes = sh * 60 + sm;
+  const endMinutes = eh * 60 + em;
+  const midMinutes = Math.floor((startMinutes + endMinutes) / 2);
+
+  // Last checkout for overall status
+  const lastOut = parseDateSafe(sessions[sessions.length - 1]?.outTime);
+  if (!lastOut) return { overall: "Absent", fn: "Absent", an: "Absent" };
+
+  const checkoutMinutes = lastOut.getHours() * 60 + lastOut.getMinutes();
+  const overall = checkoutMinutes >= midMinutes ? "Present" : "Absent";
+
+  // Calculate minutes worked in morning vs afternoon
+  let morningMinutes = 0;
+  let afternoonMinutes = 0;
+
+  sessions.forEach(s => {
+    const inDate = parseDateSafe(s.inTime);
+    const outDate = parseDateSafe(s.outTime);
+    if (!inDate || !outDate) return;
+
+    const inMin = inDate.getHours() * 60 + inDate.getMinutes();
+    const outMin = outDate.getHours() * 60 + outDate.getMinutes();
+
+    // Morning overlap
+    morningMinutes += Math.max(0, Math.min(outMin, midMinutes) - Math.max(inMin, startMinutes));
+    // Afternoon overlap
+    afternoonMinutes += Math.max(0, Math.min(outMin, endMinutes) - Math.max(inMin, midMinutes));
+  });
+
+  const fn = morningMinutes >= afternoonMinutes && morningMinutes > 0 ? "Present" : "Absent";
+  const an = afternoonMinutes > morningMinutes && afternoonMinutes > 0 ? "Present" : "Absent";
+
+  return { overall, fn, an };
 };
 
 const formatTime = (dateTime) => {
@@ -162,27 +191,52 @@ const Detail = () => {
       });
 
       // Step 3: Process groupedByDate into final attendanceArray
+// Step 3: Process groupedByDate into final attendanceArray
 const attendanceArray = Object.values(groupedByDate).map((dayObj) => {
   const sortedSessions = dayObj.sessions.sort(
     (a, b) => new Date(a.inTime) - new Date(b.inTime)
   );
-
   const firstInTime = sortedSessions[0]?.inTime || null;
   const lastOutTime = sortedSessions[sortedSessions.length - 1]?.outTime || null;
 
-  const totalHours = calculateWorkHours(sortedSessions); // <-- sum of all sessions
+  // ✅ Calculate popup-style total
+  const popupTotalHours = calculateWorkHours(sortedSessions);
 
-  const sessionStatus = getSessionStatus(totalHours, firstInTime);
+  // Keep FN/AN session status as is
+  // New
+const sessionStatus = getSessionStatus(sortedSessions, employee.startTime, employee.endTime);
+
+
+  // Default overall status
+  let overallStatus = popupTotalHours > 0 ? "Present" : "Absent";
+
+  // ✅ Midpoint rule: override overall status only
+  if (lastOutTime && employee?.startTime && employee?.endTime) {
+    const [sh, sm] = employee.startTime.split(":").map(Number);
+    const [eh, em] = employee.endTime.split(":").map(Number);
+    const startMinutes = sh * 60 + sm;
+    const endMinutes = eh * 60 + em;
+    const midMinutes = Math.floor((startMinutes + endMinutes) / 2);
+
+    const outDate = new Date(lastOutTime);
+    const checkoutMinutes = outDate.getHours() * 60 + outDate.getMinutes();
+
+    if (checkoutMinutes < midMinutes) {
+      overallStatus = "Absent";
+    } else {
+      overallStatus = "Present";
+    }
+  }
 
   return {
     date: dayObj.date,
     inTime: firstInTime,
     outTime: lastOutTime,
-    workHours: totalHours,   // <-- use this in table
-    status: totalHours > 0 ? "Present" : "Absent",
+    workHours: popupTotalHours,   // <-- same as popup
+    status: overallStatus,        // <-- now uses midpoint rule
     fn: sessionStatus.fn,
     an: sessionStatus.an,
-    sessions: sortedSessions, // store sessions for popup
+    sessions: sortedSessions,
   };
 });
 

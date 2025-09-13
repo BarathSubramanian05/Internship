@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "./UserDashboard.module.css";
-import { EmployeeContext } from "../../Context/EmployeeContext";
+import { EmployeeContext} from "../../Context/EmployeeContext";
 import { FaUserCircle } from "react-icons/fa";
 
 /* ---------- Helper Functions ---------- */
@@ -111,7 +111,7 @@ const safeDate = (dateStr) => {
 /* ---------- Main Component ---------- */
 const UserDashboard = () => {
   const navigate = useNavigate();
-  const { employee } = useContext(EmployeeContext);
+  const { employee,refreshAttendance } = useContext(EmployeeContext);
 
   const [attendance, setAttendance] = useState([]);
   const [attendanceMap, setAttendanceMap] = useState({});
@@ -288,7 +288,7 @@ const attendanceArray = Object.values(groupedByDate).map((dayObj) => {
     };
 
     fetchAttendance();
-  }, [employee, navigate]);
+  }, [employee, navigate,refreshAttendance]);
 
   /* ---------- Reset page when filter changes ---------- */
   useEffect(() => setCurrentPage(1), [selectedDate, selectedMonth, selectedYear]);

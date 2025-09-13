@@ -8,6 +8,12 @@ export const EmployeeProvider = ({ children }) => {
     return savedEmployee ? JSON.parse(savedEmployee) : null;
   });
 
+  // ✅ New: Attendance refresh flag
+  const [refreshAttendance, setRefreshAttendance] = useState(false);
+
+  // ✅ Toggle function to force Dashboard re-fetch
+  const toggleRefresh = () => setRefreshAttendance((prev) => !prev);
+
   useEffect(() => {
     if (employee) {
       localStorage.setItem("employee", JSON.stringify(employee));
@@ -22,7 +28,15 @@ export const EmployeeProvider = ({ children }) => {
   };
 
   return (
-    <EmployeeContext.Provider value={{ employee, setEmployee, logout }}>
+    <EmployeeContext.Provider
+      value={{
+        employee,
+        setEmployee,
+        logout,
+        refreshAttendance, // 👈 make available
+        toggleRefresh,     // 👈 make available
+      }}
+    >
       {children}
     </EmployeeContext.Provider>
   );

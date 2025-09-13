@@ -12,6 +12,33 @@
   z-index: 1000;
   flex-wrap: wrap; 
 }
+.checkinButton {
+  background-color: #28a745; /* Green */
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.checkinButton:hover {
+  background-color: #218838; /* Darker green */
+}
+
+.checkoutButton {
+  background-color: #f08080; /* Light red */
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.checkoutButton:hover {
+  background-color: #e57373; /* Darker light red */
+}
 
 .navbarLeft {
   display: flex;

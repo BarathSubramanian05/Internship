@@ -1,0 +1,124 @@
+.claimContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 15px; 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+}
+
+.claimBox {
+  background: #fff;
+  padding: 25px 20px; 
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+  box-sizing: border-box;
+}
+
+.claimBox h2 {
+  text-align: center;
+  margin-bottom: 12px;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.claimBox p {
+  text-align: center;
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 0.9rem; 
+}
+
+
+.claimBox form {
+  display: flex;
+  flex-direction: column;
+}
+
+.claimBox label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #555;
+  margin-top: 15px; 
+}
+
+.claimBox input,
+.claimBox textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+
+.readOnlyInput {
+  background-color: #e9ecef;
+  color: #495057;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #0056b3;
+}
+
+
+.message {
+  text-align: center;
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background-color: #e2f0e2;
+  color: #28a745;
+  border: 1px solid #28a745;
+}
+
+
+@media (min-width: 600px) {
+  .claimContainer {
+    padding: 30px;
+  }
+  
+  .claimBox {
+    padding: 30px 25px; 
+  }
+
+  .claimBox h2 {
+    font-size: 1.8rem;
+  }
+
+  .claimBox p {
+    font-size: 1rem;
+  }
+}
+
+
+@media (min-width: 1024px) {
+  .claimBox {
+    padding: 40px 35px; 
+  }
+  
+  .claimBox h2 {
+    font-size: 2rem;
+  }
+}

@@ -1,0 +1,306 @@
+
+.displayContainer {
+  padding: 20px 40px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #eaf4ff;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+ 
+}
+
+
+.topBar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #007bff;
+  position: relative;
+}
+
+.topBar h2 {
+  flex: 1;
+  text-align: center;
+  margin: 0;
+  color: #007bff;
+  font-weight: 600;
+  font-size: 26px;
+}
+
+.backBtn,
+.addEmployeeBtn {
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  color: white;
+  transition: all 0.2s ease-in-out;
+  font-weight: 500;
+}
+
+.backBtn {
+  background-color: #6c757d;
+  margin-right: auto;
+}
+
+.backBtn:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.addEmployeeBtn {
+  background-color: #28a745;
+  margin-left: auto;
+}
+
+.addEmployeeBtn:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.filterBox {
+  margin: 20px 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.filterBox input {
+  padding: 8px 12px;
+  width: 280px;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.employeeTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 15px;
+}
+
+.actions{
+  text-align: center;
+}
+
+.employeeTable th {
+  background-color: #007bff;
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.employeeTable td {
+  padding: 15px;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 15px;
+}
+
+.employeeTable tr:last-child td {
+  border-bottom: none;
+}
+
+.employeeTable tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Status colors */
+.statusAbsent {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.statusPresent {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.clickableRow {
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.clickableRow:hover {
+  background-color: #f0f8ff;
+}
+
+.deleteIcon {
+  color: #dc3545;
+  font-size: 18px;
+  cursor: pointer;
+  text-align: right;
+}
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+  color: #007bff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.pagination button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.pagination button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.activePage {
+  background-color: #007bff !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.pagination span {
+  padding: 6px 10px;
+  color: #6c757d;
+  font-size: 14px;
+}
+.actionsCell {
+  display: flex;
+  justify-content: center; /* horizontally center icons */
+  align-items: center;     /* vertically center icons */
+  gap: 15px;               /* space between edit/delete icons */
+  padding: 0;              /* remove extra padding */
+}
+
+.editIcon, .deleteIcon {
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;   /* fixed width for consistent spacing */
+  height: 28px;  /* fixed height for vertical alignment */
+  text-align: center;
+  line-height: 28px;
+}
+
+/* 📱 Responsive Styles */
+@media (max-width: 1024px) {
+  .displayContainer {
+    padding: 15px 20px;
+  }
+
+  .topBar h2 {
+    font-size: 22px;
+  }
+
+  .filterBox input {
+    width: 220px;
+    font-size: 13px;
+  }
+
+  .employeeTable th, 
+  .employeeTable td {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .topBar {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .backBtn, 
+  .addEmployeeBtn {
+    width: 100%;
+    margin: 5px 0;
+    font-size: 13px;
+  }
+
+  .filterBox {
+    justify-content: center;
+  }
+
+  .filterBox input {
+    width: 90%;
+  }
+
+  .employeeTable th,
+  .employeeTable td {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .actionsCell {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topBar h2 {
+    font-size: 18px;
+  }
+
+  .backBtn, 
+  .addEmployeeBtn {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  .filterBox input {
+    font-size: 12px;
+    width: 100%;
+  }
+
+  .employeeTable th,
+  .employeeTable td {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .pagination button {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .pagination span {
+    font-size: 12px;
+  }
+
+  .editIcon, .deleteIcon {
+    font-size: 16px;
+    width: 24px;
+    height: 24px;
+  }
+}
+

@@ -1,0 +1,126 @@
+.requestsContainer {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #f9faff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+.requestsContainer h2 {
+  text-align: center;
+  color: #004aad;
+  margin-bottom: 20px;
+}
+
+.noRequests {
+  text-align: center;
+  color: #555;
+  font-size: 1.1rem;
+}
+
+.requestsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.requestsTable th, 
+.requestsTable td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.requestsTable th {
+  background: #004aad;
+  color: white;
+  font-weight: 600;
+}
+
+.requestsTable tr:hover {
+  background: #f4f8ff;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+
+.approve {
+  background: #28a745;
+}
+
+.reject {
+  background: #dc3545;
+}
+
+
+.requestCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.requestCard h3 {
+  margin: 0;
+  color: #004aad;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  border: none;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: transform 0.2s ease;
+  color: white;
+}
+
+.btn:hover {
+  transform: scale(1.1);
+}
+
+.approve {
+  background: #28a745;
+}
+
+.reject {
+  background: #dc3545;
+}
+
+.backBtn {
+  background: #0078d7; /* Azure Blue */
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  transition: 0.2s ease;
+}
+
+.backBtn:hover {
+  background: #005a9e;
+}

@@ -1,0 +1,506 @@
+
+.detailContainer {
+  padding: 20px 40px;
+  width: 100vw;
+  max-width: none;
+  background-color: #eaf4ff;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* dim background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Popup content box */
+.popupContent {
+  background: #fff;
+  padding: 20px 30px;
+  border-radius: 12px;
+  width: 450px;
+  max-height: 80%;
+  overflow-y: auto;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Close button inside popup */
+.popupContent button {
+  margin-top: 15px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.popupContent button:hover {
+  background: #0056b3;
+}
+
+/* Small animation for entry */
+@keyframes fadeIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #007bff;
+}
+
+.backButton {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 20px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.backButton:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.header h2 {
+  color: #007bff; 
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.content {
+  display: flex;
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.leftPanel {
+  flex: 1;
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #28a745; 
+}
+
+.leftPanel h3 {
+  color: #28a745;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 600;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 10px;
+}
+
+.rightPanel {
+  flex: 2;
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #007bff; 
+}
+
+.rightPanel h3 {
+  color: #007bff; 
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 600;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 10px;
+}
+
+.employeeInfo {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #6c757d;
+}
+
+.employeeInfo p {
+  margin: 12px 0;
+  padding: 8px 0;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 16px;
+}
+
+.employeeInfo p:last-child {
+  border-bottom: none;
+}
+
+.employeeInfo strong {
+  color: #0056b3; 
+  font-weight: 600;
+  min-width: 100px;
+  display: inline-block;
+}
+
+.attendanceTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 15px;
+}
+
+.attendanceTable th {
+  background-color: #007bff;
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.attendanceTable td {
+  padding: 15px;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 15px;
+}
+
+.attendanceTable tr:last-child td {
+  border-bottom: none;
+}
+
+.attendanceTable tr:hover {
+  background-color: #f8f9fa;
+}
+
+.absentRow {
+  background-color: #fff5f5;
+}
+
+.absentRow:hover {
+  background-color: #ffe3e3;
+}
+
+.absentRow td {
+  color: #dc3545;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px;
+  font-size: 20px;
+  color: #6c757d;
+}
+
+.error {
+  text-align: center;
+  padding: 40px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.error h3 {
+  color: #dc3545;
+  margin-bottom: 15px;
+}
+
+.error p {
+  color: #6c757d;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.troubleshooting {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+  margin: 15px 0;
+  text-align: left;
+}
+
+.troubleshooting p {
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #495057;
+}
+
+.troubleshooting ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #6c757d;
+}
+
+.troubleshooting li {
+  margin-bottom: 5px;
+}
+
+.noRecords {
+  color: #6c757d;
+  font-style: italic;
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.recordCount {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .detailContainer {
+    padding: 15px;
+  }
+  
+  .content {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .leftPanel, .rightPanel {
+    flex: none;
+    width: 100%;
+    padding: 20px;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .backButton {
+    margin-right: 0;
+  }
+  
+  .attendanceTable {
+    font-size: 14px;
+  }
+  
+  .attendanceTable th,
+  .attendanceTable td {
+    padding: 10px;
+  }
+  
+  .employeeInfo p {
+    font-size: 14px;
+  }
+}
+
+/* Animation for loading */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Custom scrollbar for table */
+.attendanceTable::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.attendanceTable::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.attendanceTable::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.attendanceTable::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.content {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.leftPanel {
+  flex: 1;
+  min-width: 300px;
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #28a745;
+}
+
+.detailContainer {
+  padding: 20px 40px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #eaf4ff;
+  min-height: 100vh;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  width: 100%;
+}
+
+
+.leftPanel {
+  flex: 1;
+  min-width: 300px;
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #28a745;
+}
+
+
+.rightPanel {
+  flex: 2.5;
+  width: 100%;
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #007bff;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+
+.filterBox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.filterBox label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.filterBox input,
+.filterBox select {
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.filterBox button {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.filterBox button:hover {
+  background-color: #0056b3;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;   
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  flex-wrap: wrap;           
+}
+
+.pagination button {
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+  color: #007bff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.pagination button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.activePage {
+  background-color: #007bff !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.pagination span {
+  padding: 6px 10px;
+  color: #6c757d;
+}

@@ -1,0 +1,149 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(to bottom right, #f3f6fd, #e0ebff);
+  box-sizing: border-box;
+}
+
+.topBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #3498db;
+  text-align: center;
+}
+
+.buttonGroup {
+  position: absolute;
+  right: 0;
+  display: flex;
+  gap: 10px;
+}
+
+.logoutBtn {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.logoutBtn:hover {
+  background-color: #d9363e;
+}
+
+.deleteBtn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.deleteBtn:hover {
+  background-color: #0056b3;
+}
+
+.cancelBtn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.cardContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  flex-grow: 1;
+}
+
+.cardWrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* space between checkbox and card */
+  width: 100%;
+  max-width: 600px;
+}
+
+.checkbox {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+
+.card {
+  width: 100%;
+  max-width: 600px;
+  height: 130px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 30px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #3498db;
+  border-left: 6px solid #3498db;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  background-color: #fdfdfd;
+}
+
+.cardName {
+  font-size: 22px;
+  font-weight: 700;
+  color: #3498db;
+  margin-bottom: 6px;
+}
+
+.cardType {
+  font-size: 18px;
+  font-weight: 500;
+  color: #3498db;
+}
+
+.addCard {
+  border: 2px dashed #3498db;
+  background-color: #ecf6fd;
+  color: #3498db;
+  justify-content: center;
+  border-left: none;
+  flex-direction: column;
+}
+
+.addIcon {
+  font-size: 48px;
+  color: #3498db;
+  transition: transform 0.3s ease;
+}
+
+.addCard:hover .addIcon {
+  transform: scale(1.2);
+}

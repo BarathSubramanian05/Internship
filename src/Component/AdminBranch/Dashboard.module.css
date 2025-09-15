@@ -1,0 +1,345 @@
+:root {
+  --primary: #007bff;
+  --primary-light: #e6f0ff;
+  --background: #eef3fb;
+  --white: #ffffff;
+  --border: #dfe6f1;
+  --text-dark: #333;
+  --text-muted: #666;
+  --alert-bg: #fff8f0;
+  --alert-border: #ffb84d;
+  --alert-color: #cc6600;
+}
+.menuBtn {
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+  color: #222;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -340px; /* hidden by default */
+  width: 320px;
+  height: 100%;
+  background: #1e293b; /* dark navy */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 15px;
+  transition: left 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.sidebar.open {
+  left: 0; /* slide in */
+}
+
+
+.sidebar button:hover:not(.logoutBtn) {
+  background: #2563eb;
+}
+
+.closeBtn {
+  align-self: flex-end;
+  background: none !important;
+  color: #222;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.dashboard {
+  padding: 30px;
+  background-color: var(--background);
+  font-family: 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  box-sizing: border-box;
+  color: var(--text-dark);
+}
+
+.dashboard h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.dashboard h3 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 30px 0 15px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+}
+
+/* === Top Summary Cards === */
+.topCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.topCard {
+  background: var(--white);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.08);
+  text-align: center;
+  padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.topCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.12);
+}
+
+.topCard span {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.topCard strong {
+  font-size: 26px;
+  color: var(--primary);
+}
+
+/* === Filter Dropdown === */
+.filterSection {
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filterSection label {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.filterSection select {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: white;
+  min-width: 180px;
+  cursor: pointer;
+}
+
+.filterSection select:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+/* === Bottom Layout Section === */
+.bottomSection {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 25px;
+  align-items: flex-start;
+}
+
+/* === Left Column: Agency Stats === */
+.leftColumn {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.agencyCard {
+  flex: 0 1 200px;
+  aspect-ratio: 1 / 1;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.08);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.agencyCard:hover {
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.agencyCard span,
+.agencyCard small {
+  color: var(--text-muted);
+  display: block;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Checkbox for delete mode */
+.checkbox {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* === Right Column: Alert Box === */
+.alertBox {
+  background: var(--alert-bg);
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--alert-border);
+  box-shadow: 0 2px 8px rgba(255, 184, 77, 0.2);
+  font-size: 15px;
+  color: var(--alert-color);
+  font-weight: 500;
+}
+
+.alertBox strong {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.alertBox ul {
+  padding-left: 20px;
+  margin-top: 0;
+}
+
+.alertBox li {
+  margin-bottom: 8px;
+  position: relative;
+  padding-left: 10px;
+}
+
+.alertBox li::before {
+  content: "⚠️";
+  position: absolute;
+  left: -18px;
+  top: 0;
+}
+
+/* Header Row */
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.headerButtons {
+  display: flex;
+  gap: 12px;
+}
+
+.headerButtons button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.logoutBtn {
+  background: #ff4d4d; /* 🔴 red */
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.logoutBtn:hover {
+  background: #cc0000; /* darker red */
+}
+
+.headerButtons button:not(.logoutBtn) {
+  background: var(--primary);
+  color: white;
+}
+
+.headerButtons button:not(.logoutBtn):hover {
+  background: #0056b3;
+}
+
+
+/* Selected card style for delete mode */
+.cardSelected {
+  border: 2px solid #ff4d4d;
+  background: #ffe6e6;
+  box-shadow: 0 4px 12px rgba(255, 77, 77, 0.4);
+}
+
+/* Confirm Delete Button */
+.confirmDeleteButton {
+  flex: 1 1 100%;
+  padding: 10px 16px;
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: background 0.2s ease;
+}
+
+.confirmDeleteButton:hover:enabled {
+  background: #cc0000;
+}
+
+.confirmDeleteButton:disabled {
+  background: #f5a6a6;
+  cursor: not-allowed;
+}
+
+
+.sidebar button:not(.logoutBtn) {
+  background: #3b82f6;
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+/* === Responsive Design === */
+@media screen and (max-width: 900px) {
+  .bottomSection {
+    grid-template-columns: 1fr;
+  }
+
+  .alertBox {
+    order: -1;
+  }
+  
+  .headerRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .headerButtons {
+    flex-wrap: wrap;
+  }
+}
